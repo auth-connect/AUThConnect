@@ -20,9 +20,11 @@ type Service interface {
 	// The keys and values in the map are service-specific.
 	Health() map[string]string
 
-	GetUsers() []models.User
-
+	GetUsers() ([]models.ReturnUser, error)
+  GetUser(id int64) (models.ReturnUser, error)
 	CreateUser(user models.User) (int64, error)
+  UpdateUser(id int64, user models.User) error
+  DeleteUser(id int64) error
 
 	// Close terminates the database connection.
 	// It returns an error if the connection cannot be closed.
@@ -53,6 +55,12 @@ func New() Service {
 	if err != nil {
 		log.Fatal(err)
 	}
+
+  // Set connection pool parameters
+  db.SetMaxOpenConns(25)  // Maximum number of open connections
+  db.SetMaxIdleConns(25)  // Maximum number of idle connections
+  db.SetConnMaxLifetime(5 * time.Minute)  // Maximum lifetime of a connection
+
 	dbInstance = &service{
 		db: db,
 	}
@@ -119,19 +127,20 @@ func (s *service) Close() error {
 	return s.db.Close()
 }
 
-func (s *service) GetUsers() []models.User {
-	var users []models.User
-	query := `SELECT * FROM users`
+func (s *service) GetUsers() ([]models.ReturnUser, error) {
+  users := []models.ReturnUser{}
+	query := `SELECT id, username, full_name, role, email FROM users`
 
 	rows, err := s.db.Query(query)
 	if err != nil {
 		log.Printf("Error retrieving users: %v", err)
-		return nil
+		return nil, err
 	}
+  defer rows.Close()
 
 	for rows.Next() {
-		var user models.User
-		err := rows.Scan(&user)
+		var user models.ReturnUser
+		err := rows.Scan(&user.Id, &user.Username, &user.FullName, &user.Role, &user.Email)
 		if err != nil {
 			fmt.Printf("Error retrieving a single user: %v", err)
 			break
@@ -139,7 +148,24 @@ func (s *service) GetUsers() []models.User {
 		users = append(users, user)
 	}
 
-	return users
+	return users, nil
+}
+
+func (s *service) GetUser(id int64) (models.ReturnUser, error) {
+  user := models.ReturnUser{}
+  query := `SELECT id, username, full_name, role, email FROM users WHERE id = $1`
+
+  err := s.db.QueryRow(query, id).Scan(&user.Id, &user.Username, &user.FullName, &user.Role, &user.Email)
+
+  if err != nil {
+    if err == sql.ErrNoRows {
+      return user, fmt.Errorf("user with id %d not found", id)
+    }
+    log.Printf("Error retrieving user: %v", err)
+    return user, err
+  }
+
+  return user, nil
 }
 
 func (s *service) CreateUser(user models.User) (int64, error) {
@@ -155,4 +181,43 @@ func (s *service) CreateUser(user models.User) (int64, error) {
 	}
 
 	return id, nil
+}
+
+func (s *service) UpdateUser(id int64, user models.User) error {
+  query := `UPDATE users 
+            SET username = $1, hashed_password = $2, full_name = $3, role = $4, email = $5
+            WHERE id = $6`
+
+  _, err := s.db.Exec(query, user.Username, user.Password, user.FullName, user.Role, user.Email, id)
+  if err != nil {
+    log.Printf("Error updating user: %v", err)
+    return err
+  }
+
+  log.Printf("Got user with username: %s", user.Username)
+
+  return nil
+}
+
+func (s *service) DeleteUser(id int64) error {
+  query := `DELETE FROM users WHERE id = $1`
+
+  res, err := s.db.Exec(query, id)
+  if err != nil {
+    log.Printf("Error deleting user: %v", err)
+    return err
+  }
+
+  rowsAffected, err := res.RowsAffected()
+  if err != nil {
+    log.Printf("Error getting rows affected: %v", err)
+    return err
+  }
+
+  if rowsAffected == 0 {
+    return fmt.Errorf("user with id %d not found", id)
+  }
+
+  log.Printf("Deleted user with id: %d", id)
+  return nil
 }
