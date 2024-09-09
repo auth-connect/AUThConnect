@@ -1,7 +1,0 @@
-export PORT=8000
-export DB_DATABASE=authconnect
-export DB_PORT=5432
-export DB_HOST=localhost
-export DB_USERNAME=tents
-export DB_PASSWORD=21122002
-export DB_SCHEMA=public
