@@ -56,6 +56,11 @@ func (mdb *MockDatabase) CreateUser(user models.User) (int64, error) {
 }
 
 func (mdb *MockDatabase) UpdateUser(id int64, user models.User) error {
+	_, ok := db[int(id)]
+	if !ok {
+		return fmt.Errorf("not found")
+	}
+	db[int(id)] = user
 	return nil
 }
 
