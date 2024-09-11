@@ -20,10 +20,14 @@ func TestMain(m *testing.M) {
 	mockDB = database.NewMockDatabase()
 	server = &Server{db: mockDB}
 	router = gin.New()
-	router.GET("/", server.HelloWorldHandler)
+
+	router.GET("/health", server.HelloWorldHandler)
 	router.GET("/users", server.getUsers)
 	router.GET("/users/:id", server.getUser)
 	router.POST("/users", server.createUser)
+	router.PUT("/users/:id", server.updateUser)
+	router.DELETE("/users/:id", server.deleteUser)
+
 	// Run the tests
 	m.Run()
 }
@@ -32,7 +36,7 @@ func TestHelloWorldHandler(t *testing.T) {
 	// s := &Server{}
 	// r := gin.New()
 	// Create a test HTTP request
-	req, err := http.NewRequest("GET", "/", nil)
+	req, err := http.NewRequest("GET", "/health", nil)
 	if err != nil {
 		t.Fatal(err)
 	}
@@ -171,5 +175,58 @@ func TestCreateUser(t *testing.T) {
 	t.Log(rr.Body)
 	if rr.Body.String() != expectedUsers {
 		t.Errorf("Handler returned unexpected body: got %v want %v", rr.Body.String(), expectedUsers)
+	}
+}
+
+func TestUpdateUser(t *testing.T) {
+	requestBody := `{"username":"testuser","password":"testpassword","full_name":"test user","role":"tester","email":"test@example.com"}`
+	req, err := http.NewRequest("POST", "/users", bytes.NewBufferString(requestBody))
+	if err != nil {
+		t.Fatal(err)
+	}
+
+	rr := httptest.NewRecorder()
+	router.ServeHTTP(rr, req)
+	if status := rr.Code; status != http.StatusCreated {
+		t.Errorf("Handler returned wrong status code: got %v want %v", status, http.StatusCreated)
+	}
+
+	user := models.ReturnUser{Id: 3, Username: "testuser", FullName: "test user", Role: "tester", Email: "test@example.com"}
+	expectedUser := user.String()
+	if rr.Body.String() != expectedUser {
+		t.Errorf("Handler returned unexpected body: got %v want %v", rr.Body.String(), expectedUser)
+	}
+
+	requestBody = `{"username":"newtestuser","password":"testpassword","full_name":"test user","role":"tester","email":"test@example.com"}`
+	req, err = http.NewRequest("PUT", "/users/3", bytes.NewBufferString(requestBody))
+	if err != nil {
+		t.Fatal(err)
+	}
+
+	rr = httptest.NewRecorder()
+	router.ServeHTTP(rr, req)
+	if status := rr.Code; status != http.StatusOK {
+		t.Errorf("Handler returned wrong status code: got %v want %v", status, http.StatusOK)
+	}
+
+	expected := "{\"message\":\"User updated successfully\"}"
+	if rr.Body.String() != expected {
+		t.Errorf("Handler returned unexpected body: got %v want %v", rr.Body.String(), expected)
+	}
+
+	req, err = http.NewRequest("GET", "/users/3", nil)
+	if err != nil {
+		t.Fatal(err)
+	}
+
+	rr = httptest.NewRecorder()
+	router.ServeHTTP(rr, req)
+	if status := rr.Code; status != http.StatusOK {
+		t.Errorf("Handler returned wrong status code; got %v want %v", status, http.StatusOK)
+	}
+
+	expected = `{"id":3,"username":"newtestuser","full_name":"test user","role":"tester","email":"test@example.com"}`
+	if rr.Body.String() != expected {
+		t.Errorf("Handler returned unexpected body: got %v want %v", rr.Body.String(), expected)
 	}
 }
