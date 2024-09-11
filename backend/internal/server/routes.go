@@ -13,14 +13,12 @@ func (s *Server) RegisterRoutes() http.Handler {
 	r := gin.Default()
 
 	r.GET("/", s.HelloWorldHandler)
-
 	r.GET("/health", s.healthHandler)
-
 	r.GET("/users", s.getUsers)
-  r.GET("/users/:id", s.getUser)
+	r.GET("/users/:id", s.getUser)
 	r.POST("/users", s.createUser)
-  r.PUT("/users/:id", s.updateUser)
-  r.DELETE("/users/:id", s.deleteUser)
+	r.PUT("/users/:id", s.updateUser)
+	r.DELETE("/users/:id", s.deleteUser)
 
 	return r
 }
@@ -37,37 +35,37 @@ func (s *Server) healthHandler(c *gin.Context) {
 }
 
 func (s *Server) getUsers(c *gin.Context) {
-  users := []models.ReturnUser{}
+	users := []models.ReturnUser{}
 
-  users, err := s.db.GetUsers()
-  if err != nil {
-    c.JSON(http.StatusInternalServerError, err)
-    return
-  }
+	users, err := s.db.GetUsers()
+	if err != nil {
+		c.JSON(http.StatusInternalServerError, err)
+		return
+	}
 
 	c.JSON(http.StatusOK, users)
 }
 
 func (s *Server) getUser(c *gin.Context) {
-  idStr := c.Param("id")
-  id, err := strconv.ParseInt(idStr, 10, 64)
-  if err != nil {
-    c.JSON(http.StatusBadRequest, gin.H{"error": "Invalid user ID"})
-    return
-  }
-  
-  // TODO: Handle more erros
-  user, err := s.db.GetUser(id)
-  if err != nil {
-    if strings.Contains(err.Error(), "not found") {
-      c.JSON(http.StatusNotFound, gin.H{"error": "User not found"})
-      return
-    }
-    c.JSON(http.StatusInternalServerError, err)
-    return
-  }
+	idStr := c.Param("id")
+	id, err := strconv.ParseInt(idStr, 10, 64)
+	if err != nil {
+		c.JSON(http.StatusBadRequest, gin.H{"error": "Invalid user ID"})
+		return
+	}
 
-  c.JSON(http.StatusOK, user)
+	// TODO: Handle more erros
+	user, err := s.db.GetUser(id)
+	if err != nil {
+		if strings.Contains(err.Error(), "not found") {
+			c.JSON(http.StatusNotFound, gin.H{"error": "User not found"})
+			return
+		}
+		c.JSON(http.StatusInternalServerError, err)
+		return
+	}
+
+	c.JSON(http.StatusOK, user)
 }
 
 func (s *Server) createUser(c *gin.Context) {
@@ -105,21 +103,21 @@ func (s *Server) createUser(c *gin.Context) {
 }
 
 func (s *Server) updateUser(c *gin.Context) {
-  var body models.User
+	var body models.User
 
-  idStr := c.Param("id")
-  id, err := strconv.ParseInt(idStr, 10, 64)
-  if err != nil {
-    c.JSON(http.StatusBadRequest, gin.H{"error": "Invalid user ID"})
-    return
-  }
+	idStr := c.Param("id")
+	id, err := strconv.ParseInt(idStr, 10, 64)
+	if err != nil {
+		c.JSON(http.StatusBadRequest, gin.H{"error": "Invalid user ID"})
+		return
+	}
 
-  if err := c.ShouldBindJSON(&body); err != nil {
-    c.JSON(http.StatusBadRequest, err)
-    return
-  }
+	if err := c.ShouldBindJSON(&body); err != nil {
+		c.JSON(http.StatusBadRequest, err)
+		return
+	}
 
-  // TODO: Hash password
+	// TODO: Hash password
 
 	user := models.User{
 		Username: body.Username,
@@ -129,28 +127,28 @@ func (s *Server) updateUser(c *gin.Context) {
 		Role:     body.Role,
 	}
 
-  if err := s.db.UpdateUser(id, user); err != nil {
-    // TODO: Handle more errors
-    c.JSON(http.StatusNotFound, gin.H{"error": "User not found"})
-    return
-  }
+	if err := s.db.UpdateUser(id, user); err != nil {
+		// TODO: Handle more errors
+		c.JSON(http.StatusNotFound, gin.H{"error": "User not found"})
+		return
+	}
 
-  c.JSON(http.StatusOK, gin.H{"message": "User updated successfully"})
+	c.JSON(http.StatusOK, gin.H{"message": "User updated successfully"})
 }
 
 func (s *Server) deleteUser(c *gin.Context) {
-  idStr := c.Param("id")
-  id, err := strconv.ParseInt(idStr, 10, 64)
-  if err != nil {
-    c.JSON(http.StatusBadRequest, gin.H{"error": "Invalid User ID"})
-    return
-  }
+	idStr := c.Param("id")
+	id, err := strconv.ParseInt(idStr, 10, 64)
+	if err != nil {
+		c.JSON(http.StatusBadRequest, gin.H{"error": "Invalid User ID"})
+		return
+	}
 
-  if err := s.db.DeleteUser(id); err != nil {
-    // TODO: Handle more errors
-    c.JSON(http.StatusNotFound, gin.H{"error": "User not found"})
-    return
-  }
+	if err := s.db.DeleteUser(id); err != nil {
+		// TODO: Handle more errors
+		c.JSON(http.StatusNotFound, gin.H{"error": "User not found"})
+		return
+	}
 
-  c.JSON(http.StatusOK, gin.H{"message": "User deleted successfully"})
+	c.JSON(http.StatusOK, gin.H{"message": "User deleted successfully"})
 }
