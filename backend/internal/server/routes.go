@@ -4,6 +4,7 @@ import (
 	"AUThConnect/internal/models"
 	"net/http"
 	"strconv"
+	"strings"
 
 	"github.com/gin-gonic/gin"
 )
@@ -58,6 +59,10 @@ func (s *Server) getUser(c *gin.Context) {
   // TODO: Handle more erros
   user, err := s.db.GetUser(id)
   if err != nil {
+    if strings.Contains(err.Error(), "not found") {
+      c.JSON(http.StatusNotFound, gin.H{"error": "User not found"})
+      return
+    }
     c.JSON(http.StatusInternalServerError, err)
     return
   }
