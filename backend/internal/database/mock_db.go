@@ -56,14 +56,29 @@ func (mdb *MockDatabase) CreateUser(user models.User) (int64, error) {
 }
 
 func (mdb *MockDatabase) UpdateUser(id int64, user models.User) error {
+	_, ok := db[int(id)]
+	if !ok {
+		return fmt.Errorf("not found")
+	}
+	db[int(id)] = user
 	return nil
 }
 
 func (mdb *MockDatabase) DeleteUser(id int64) error {
+	_, ok := db[int(id)]
+	if !ok {
+		return fmt.Errorf("not found")
+	}
+	delete(db, int(id))
 	return nil
 }
 
 func (mdb *MockDatabase) Close() error {
-	db = nil
 	return nil
+}
+
+func (mdb *MockDatabase) Reset() {
+	for key := range db {
+		delete(db, key)
+	}
 }
