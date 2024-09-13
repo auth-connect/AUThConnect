@@ -1,9 +1,12 @@
-<nav>
-    <ul>
+<!-- <nav> -->
+    <!-- <ul>
       <li><a routerLink="/home" routerLinkActive="active" ariaCurrentWhenActive="page">Home</a></li>
       <li><a routerLink="/about" routerLinkActive="active" ariaCurrentWhenActive="page">About</a></li>
       <li><a routerLink="/form" routerLinkActive="active" ariaCurrentWhenActive="page">Form</a></li>
-    </ul>
-  </nav>
+    </ul> -->
+  <!-- </nav> -->
   <!-- The routed views render in the <router-outlet>-->
-  <router-outlet></router-outlet>
+  <!-- <router-outlet></router-outlet> -->
+  <div class="body" [ngClass]="sizeClass()">
+    <router-outlet />
+  </div>

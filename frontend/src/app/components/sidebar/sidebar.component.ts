@@ -11,26 +11,37 @@ import { RouterLink, RouterModule, RouterOutlet } from '@angular/router';
   styleUrl: './sidebar.component.scss',
 })
 export class SidebarComponent {
+  isSidebarCollapsed = input.required<boolean>();
+  changeIsSidebarCollapsed = output<boolean>();
+  
   items = [
     {
       routeLink: 'dashboard',
-      icon: 'fal fa-home',
+      icon: '',
       label: 'Dashboard',
     },
     {
       routeLink: 'products',
-      icon: 'fal fa-box-open',
+      icon: '',
       label: 'Products',
     },
     {
       routeLink: 'pages',
-      icon: 'fal fa-file',
+      icon: '',
       label: 'Pages',
     },
     {
       routeLink: 'settings',
-      icon: 'fal fa-cog',
+      icon: '',
       label: 'Settings',
     },
   ];
+
+  toggleCollapse(): void {
+    this.changeIsSidebarCollapsed.emit(!this.isSidebarCollapsed());
+  }
+
+  closeSidenav(): void {
+    this.changeIsSidebarCollapsed.emit(true);
+  }
 }
