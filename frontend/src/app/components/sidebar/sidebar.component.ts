@@ -2,11 +2,14 @@
 import { CommonModule } from '@angular/common';
 import { Component, input, output } from '@angular/core';
 import { RouterLink, RouterModule, RouterOutlet } from '@angular/router';
+import { NgIconComponent, provideIcons } from '@ng-icons/core';
+import { featherHome } from '@ng-icons/feather-icons';
 
 @Component({
   selector: 'app-sidebar',
   standalone: true,
-  imports: [RouterModule, CommonModule, RouterOutlet, RouterLink],
+  imports: [RouterModule, CommonModule, RouterOutlet, RouterLink, NgIconComponent],
+  viewProviders: [provideIcons({ featherHome })],
   templateUrl: './sidebar.component.html',
   styleUrl: './sidebar.component.scss',
 })
@@ -16,24 +19,14 @@ export class SidebarComponent {
   
   items = [
     {
-      routeLink: 'dashboard',
-      icon: '',
-      label: 'Dashboard',
+      routeLink: 'home',
+      icon: featherHome,
+      label: 'Home',
     },
     {
-      routeLink: 'products',
+      routeLink: 'about',
       icon: '',
-      label: 'Products',
-    },
-    {
-      routeLink: 'pages',
-      icon: '',
-      label: 'Pages',
-    },
-    {
-      routeLink: 'settings',
-      icon: '',
-      label: 'Settings',
+      label: 'About',
     },
   ];
 

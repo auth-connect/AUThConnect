@@ -65,7 +65,7 @@
             "host":"0.0.0.0",
             "port": 4200,
             "disableHostCheck": true,
-            "publicHost":"http://192.168.4.43:4200"
+            "publicHost":"http://localhost:4200"
           },
           "builder": "@angular-devkit/build-angular:dev-server",
           "configurations": {
