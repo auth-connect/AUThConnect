@@ -21,5 +21,8 @@ FROM alpine:3.19
 # Copy the binary from the builder stage
 COPY --from=builder /app/backend /usr/local/bin/backend
 
+# Expose port
+EXPOSE 8000
+
 # Set the entry point
 ENTRYPOINT [ "/usr/local/bin/backend" ]
