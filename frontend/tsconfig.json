@@ -23,10 +23,10 @@
     ],
     "paths": {
       "@spartan-ng/ui-alert-helm": [
-        "src/app/libs/ui/ui-alert-helm/src/index.ts"
+        "./src/app/libs/ui/ui-alert-helm/src/index.ts"
       ],
       "@spartan-ng/ui-icon-helm": [
-        "src/app/libs/ui/ui-icon-helm/src/index.ts"
+        "./src/app/libs/ui/ui-icon-helm/src/index.ts"
       ]
     }
   },
