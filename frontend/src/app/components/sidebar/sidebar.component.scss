@@ -1,15 +1,17 @@
 .sidenav {
-    background: #012a5b;
+    // background: #012a5b;
+    background: #eff5f8;
     transition: all 0.5s ease;
     position: fixed;
     z-index: 1;
     top: 0;
     width: 16.5625rem;
     height: 100vh;
-    box-shadow: 0.063rem 0 1.25rem 0 #8690a3;
+    // box-shadow: 0.063rem 0 1.25rem 0 #8690a3;
+    box-shadow: 0.063rem 0 1.25rem #eaeaeb;
   }
   .sidenav-collapsed {
-    width: 5rem;
+    width: fit-content;
   }
   .sidenav .logo-container {
     display: flex;
@@ -33,7 +35,7 @@
     margin-left: 1.5rem;
     font-size: 24px;
     font-weight: 700;
-    color: #fff;
+    color: #474c53;
   }
   .sidenav .logo-container .btn-close {
     margin-left: auto;
@@ -45,7 +47,7 @@
     border: none;
   }
   .sidenav .logo-container .btn-close .fa-times {
-    color: #fff;
+    color: #474c53;
     font-size: 24px;
   }
   
@@ -66,25 +68,41 @@
   .sidenav-nav .sidenav-nav-item .sidenav-nav-link {
     display: flex;
     align-items: center;
-    height: 3rem;
+    height: fit-content;
     color: #f3f3f3;
     text-decoration: none;
     border-radius: 0.625rem;
     transition: all 0.3s ease;
+    justify-content: flex-start;
+    padding: 0.5rem;
   }
-  .sidenav-nav .sidenav-nav-item .sidenav-nav-link .sidenav-link-icon {
-    font-size: 22px;
-    width: 2rem;
-    min-width: 2rem;
-    text-align: center;
-    padding: 12px;
+  .sidenav-nav .sidenav-nav-item .sidenav-nav-link .sidenav-link-icon-full {
+    display: flex;
+    justify-content: center; /* Centers horizontally */
+    align-items: center;     /* Centers vertically */
+    margin-left: 1rem;
+    background-color: #f9f9f9;
+    padding: 0.5rem;
+    border-radius: 1rem;
   }
+
+  .sidenav-nav .sidenav-nav-item .sidenav-nav-link .sidenav-link-icon-collapsed{
+    display: flex;
+    justify-content: center; /* Centers horizontally */
+    align-items: center;     /* Centers vertically */
+    width: 100%;
+    background-color: #f9f9f9;
+    padding: 0.5rem;
+    border-radius: 1rem;
+  }
+
   .sidenav-nav .sidenav-nav-item .sidenav-nav-link .sidenav-link-text {
     margin-left: 1.5rem;
+    color: #474c53;
   }
   .sidenav-nav .sidenav-nav-item:hover .sidenav-nav-link {
     background-color: #fff;
-    color: #000;
+    color: #474c53;
   }
   
   .active {
