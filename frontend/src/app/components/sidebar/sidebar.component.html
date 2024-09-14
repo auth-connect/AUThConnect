@@ -9,7 +9,6 @@
     @if (!isSidebarCollapsed()) {
       <div class="logo-text">AUThConnect</div>
       <button class="btn-close" (click)="closeSidenav()">
-        <i class="fal fa-times close-icon"></i>
       </button>
     }
   </div>
@@ -22,11 +21,23 @@
           routerLinkActive="active"
           [routerLinkActiveOptions]="{ exact: true }"
         >
-          <ng-icon [name]="item.icon"></ng-icon>
-          <i class="sidenav-link-icon" [class]="item.icon"></i>
+          
+          
+
+          
+          <!-- <i class="sidenav-link-icon" [class]="item.icon"></i> -->
           @if (!isSidebarCollapsed()) {
+            <div class="sidenav-link-icon-full"> 
+              <ng-icon [name]="item.icon"></ng-icon>
+            </div>
             <span class="sidenav-link-text">{{ item.label }}</span>
           }
+          @else {
+            <div class="sidenav-link-icon-collapsed"> 
+              <ng-icon [name]="item.icon"></ng-icon>
+            </div>
+          }
+          
         </a>
       </li>
     }
