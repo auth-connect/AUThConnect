@@ -30,6 +30,7 @@ services:
       DB_PASSWORD: ${DB_PASSWORD}
       DB_HOST: postgres
       DB_SCHEMA: ${DB_SCHEMA}
+      CORS_URL: localhost:4200
     depends_on:
       postgres:
         condition: service_healthy
