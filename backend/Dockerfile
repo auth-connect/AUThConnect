@@ -1,6 +1,7 @@
 # Stage 1: Build
 FROM golang:1.23.1-alpine3.19 AS builder
 
+# Set the working directory
 WORKDIR /app
 
 # Copy go mod and sum files

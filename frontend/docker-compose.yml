@@ -10,27 +10,22 @@ services:
       - "${DB_PORT}:5432"
     volumes:
       - psql_volume:/var/lib/postgresql/data
-      - ./postgres/init.sql:/docker-entrypoint-initdb.d/init.sql
+      - ../backend/postgres/init.sql:/docker-entrypoint-initdb.d/init.sql
     healthcheck:
-      test: [ "CMD-SHELL", "pg_isready -U ${DB_USERNAME} -d ${DB_DATABASE}" ]
+      test: ["CMD-SHELL", "pg_isready -U ${DB_USERNAME} -d ${DB_DATABASE}"]
       interval: 10s
       timeout: 5s
       retries: 3
-  
-  backend:
+
+  frontend:
     build:
       context: .
       dockerfile: Dockerfile
-    container_name: backend
+    container_name: frontend
     ports:
-      - "8000:8000"
+      - "80:80"
     environment:
-      DB_DATABASE: ${DB_DATABASE}
-      DB_USERNAME: ${DB_USERNAME}
-      DB_PASSWORD: ${DB_PASSWORD}
-      DB_HOST: postgres
-      DB_SCHEMA: ${DB_SCHEMA}
-      CORS_URL: localhost:4200
+      API_URL: ${API_URL}
     depends_on:
       postgres:
         condition: service_healthy

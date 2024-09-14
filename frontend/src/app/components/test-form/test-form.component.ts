@@ -1,7 +1,13 @@
 import { CommonModule } from '@angular/common';
 import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { Component, inject, OnInit } from '@angular/core';
-import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
+import {
+  FormBuilder,
+  FormGroup,
+  ReactiveFormsModule,
+  Validators,
+} from '@angular/forms';
+import { environment } from '../../../environment/environment';
 
 export interface Payload {
   username: string;
@@ -14,12 +20,9 @@ export interface Payload {
 @Component({
   selector: 'app-test-form',
   standalone: true,
-  imports: [
-    ReactiveFormsModule,
-    CommonModule,
-  ],
+  imports: [ReactiveFormsModule, CommonModule],
   templateUrl: './test-form.component.html',
-  styleUrls: ['./test-form.component.scss'] // Corrected 'styleUrl' to 'styleUrls'
+  styleUrls: ['./test-form.component.scss'], // Corrected 'styleUrl' to 'styleUrls'
 })
 export class TestFormComponent implements OnInit {
   testForm!: FormGroup;
@@ -38,7 +41,7 @@ export class TestFormComponent implements OnInit {
       full_name: ['', Validators.required],
       email: ['', [Validators.required, Validators.email]], // Added email validator
       password: ['', [Validators.required, Validators.minLength(6)]], // Added minLength validator
-      role: ['', Validators.required]
+      role: ['', Validators.required],
     });
   }
 
@@ -53,21 +56,23 @@ export class TestFormComponent implements OnInit {
       full_name: form.get('full_name')?.value,
       password: form.get('password')?.value,
       email: form.get('email')?.value,
-      role: form.get('role')?.value
+      role: form.get('role')?.value,
     };
 
     const headers = new HttpHeaders({
       'Content-Type': 'application/json',
-      'Accept': 'application/json'
+      Accept: 'application/json',
       // Add other custom headers here if necessary
     });
 
-    this.http.post<any>('http://192.168.4.13:8000/users', payload, { headers }).subscribe(
-      response => {
+    const apiUrl = `${environment.apiUrl}/users`;
+
+    this.http.post<any>(apiUrl, payload, { headers }).subscribe(
+      (response) => {
         console.log('User Created', response);
         // Optionally, reset the form or provide user feedback here
       },
-      error => {
+      (error) => {
         console.error('Error creating user', error);
         // Handle different error statuses or messages here
       }

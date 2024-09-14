@@ -1,13 +1,23 @@
-<!doctype html>
+<!DOCTYPE html>
 <html lang="en">
-<head>
-  <meta charset="utf-8">
-  <title>Frontend</title>
-  <base href="/">
-  <meta name="viewport" content="width=device-width, initial-scale=1">
-  <link rel="icon" type="image/x-icon" href="favicon.ico">
-</head>
-<body>
-  <app-root></app-root>
-</body>
+  <head>
+    <meta charset="utf-8" />
+    <title>Frontend</title>
+    <base href="/" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <link rel="icon" type="image/x-icon" href="favicon.ico" />
+    <!-- <script src="assets/set-env.js"></script> -->
+    <script>
+      // Load set-env.js only if Angular is built for production
+      if (
+        window.location.href.indexOf("/index.html") > -1 ||
+        window.location.href.indexOf("production") > -1
+      ) {
+        document.write('<script src="assets/set-env.js"><\/script>');
+      }
+    </script>
+  </head>
+  <body>
+    <app-root></app-root>
+  </body>
 </html>
