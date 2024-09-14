@@ -4,6 +4,7 @@ import (
 	"AUThConnect/internal/models"
 	"context"
 	"database/sql"
+	"errors"
 	"fmt"
 	"log"
 	"os"
@@ -12,6 +13,8 @@ import (
 
 	_ "github.com/jackc/pgx/v5/stdlib"
 	_ "github.com/joho/godotenv/autoload"
+	"gorm.io/driver/postgres"
+	"gorm.io/gorm"
 )
 
 // Service represents a service that interacts with a database.
@@ -21,10 +24,10 @@ type Service interface {
 	Health() map[string]string
 
 	GetUsers() ([]models.ReturnUser, error)
-  GetUser(id int64) (models.ReturnUser, error)
-	CreateUser(user models.User) (int64, error)
-  UpdateUser(id int64, user models.User) error
-  DeleteUser(id int64) error
+	GetUser(id int64) (models.ReturnUser, error)
+	CreateUser(user models.InputUser) (int64, error)
+	UpdateUser(id int64, user models.InputUser) error
+	DeleteUser(id int64) error
 
 	// Close terminates the database connection.
 	// It returns an error if the connection cannot be closed.
@@ -34,6 +37,8 @@ type Service interface {
 type service struct {
 	db *sql.DB
 }
+
+var gormDB *gorm.DB
 
 var (
 	database   = os.Getenv("DB_DATABASE")
@@ -45,21 +50,38 @@ var (
 	dbInstance *service
 )
 
-func New() Service {
-	// Reuse Connection
-	if dbInstance != nil {
-		return dbInstance
+func InitializeDatabase() {
+	if err := gormDB.AutoMigrate(models.User{}); err != nil {
+		log.Fatalf("Error running migrations: %v", err)
 	}
+
+	err := gormDB.Exec(`ALTER TABLE users ADD CONSTRAINT unique_username_email UNIQUE (username, email);`).Error
+	if err != nil {
+		log.Fatalf("Error adding unique constraint: %v", err)
+	}
+}
+
+func New() Service {
+
 	connStr := fmt.Sprintf("postgres://%s:%s@%s:%s/%s?sslmode=disable&search_path=%s", username, password, host, port, database, schema)
 	db, err := sql.Open("pgx", connStr)
 	if err != nil {
 		log.Fatal(err)
 	}
 
-  // Set connection pool parameters
-  db.SetMaxOpenConns(25)  // Maximum number of open connections
-  db.SetMaxIdleConns(25)  // Maximum number of idle connections
-  db.SetConnMaxLifetime(5 * time.Minute)  // Maximum lifetime of a connection
+	gormDB, err = gorm.Open(postgres.New(postgres.Config{
+		Conn: db,
+	}), &gorm.Config{TranslateError: true})
+	if err != nil {
+		log.Fatal(err)
+	}
+
+	// Set connection pool parameters
+	db.SetMaxOpenConns(25)                 // Maximum number of open connections
+	db.SetMaxIdleConns(25)                 // Maximum number of idle connections
+	db.SetConnMaxLifetime(5 * time.Minute) // Maximum lifetime of a connection
+
+	InitializeDatabase()
 
 	dbInstance = &service{
 		db: db,
@@ -128,7 +150,7 @@ func (s *service) Close() error {
 }
 
 func (s *service) GetUsers() ([]models.ReturnUser, error) {
-  users := []models.ReturnUser{}
+	users := []models.ReturnUser{}
 	query := `SELECT id, username, full_name, role, email FROM users`
 
 	rows, err := s.db.Query(query)
@@ -136,7 +158,7 @@ func (s *service) GetUsers() ([]models.ReturnUser, error) {
 		log.Printf("Error retrieving users: %v", err)
 		return nil, err
 	}
-  defer rows.Close()
+	defer rows.Close()
 
 	for rows.Next() {
 		var user models.ReturnUser
@@ -152,72 +174,96 @@ func (s *service) GetUsers() ([]models.ReturnUser, error) {
 }
 
 func (s *service) GetUser(id int64) (models.ReturnUser, error) {
-  user := models.ReturnUser{}
-  query := `SELECT id, username, full_name, role, email FROM users WHERE id = $1`
+	user := models.ReturnUser{}
+	query := `SELECT id, username, full_name, role, email FROM users WHERE id = $1`
 
-  err := s.db.QueryRow(query, id).Scan(&user.Id, &user.Username, &user.FullName, &user.Role, &user.Email)
+	err := s.db.QueryRow(query, id).Scan(&user.Id, &user.Username, &user.FullName, &user.Role, &user.Email)
 
-  if err != nil {
-    if err == sql.ErrNoRows {
-      return user, fmt.Errorf("user with id %d not found", id)
-    }
-    log.Printf("Error retrieving user: %v", err)
-    return user, err
-  }
-
-  return user, nil
-}
-
-func (s *service) CreateUser(user models.User) (int64, error) {
-	var id int64
-	query := `INSERT INTO users (username, hashed_password, full_name, role, email)
-            VALUES ($1, $2, $3, $4, $5)
-            RETURNING id`
-
-	err := s.db.QueryRow(query, user.Username, user.Password, user.FullName, user.Role, user.Email).Scan(&id)
 	if err != nil {
-		log.Printf("Error creating user: %v", err)
-		return 0, err
+		if err == sql.ErrNoRows {
+			return user, fmt.Errorf("user with id %d not found", id)
+		}
+		log.Printf("Error retrieving user: %v", err)
+		return user, err
 	}
 
-	return id, nil
+	return user, nil
 }
 
-func (s *service) UpdateUser(id int64, user models.User) error {
-  query := `UPDATE users 
+func (s *service) CreateUser(user models.InputUser) (int64, error) {
+	// var id int64
+	// query := `INSERT INTO users (username, hashed_password, full_name, role, email)
+	// VALUES ($1, $2, $3, $4, $5)
+	// RETURNING id`
+
+	// err := s.db.QueryRow(query, user.Username, user.Password, user.FullName, user.Role, user.Email).Scan(&id)
+
+	u := models.User{
+		Username:       user.Username,
+		HashedPassword: user.Password,
+		FullName:       user.FullName,
+		Role:           user.Role,
+		Email:          user.Email,
+		CreatedAt:      time.Now(),
+	}
+
+	//TODO: Use concurrency to check if the `username` or the `email` are in use
+
+	// Attempt to create the user
+	if err := gormDB.Create(&u).Error; err != nil {
+		if isUniqueConstraintError(err) {
+			return 0, fmt.Errorf("Username or email already in use")
+		}
+		// log.Printf("Error creating user: %v", err)
+		return 0, fmt.Errorf("Error creating user: %v", err)
+	}
+
+	// if err != nil {
+	// 	return 0, err
+	// }
+
+	return u.ID, nil
+}
+
+func (s *service) UpdateUser(id int64, user models.InputUser) error {
+	query := `UPDATE users 
             SET username = $1, hashed_password = $2, full_name = $3, role = $4, email = $5
             WHERE id = $6`
 
-  _, err := s.db.Exec(query, user.Username, user.Password, user.FullName, user.Role, user.Email, id)
-  if err != nil {
-    log.Printf("Error updating user: %v", err)
-    return err
-  }
+	_, err := s.db.Exec(query, user.Username, user.Password, user.FullName, user.Role, user.Email, id)
+	if err != nil {
+		log.Printf("Error updating user: %v", err)
+		return err
+	}
 
-  log.Printf("Got user with username: %s", user.Username)
+	log.Printf("Got user with username: %s", user.Username)
 
-  return nil
+	return nil
 }
 
 func (s *service) DeleteUser(id int64) error {
-  query := `DELETE FROM users WHERE id = $1`
+	query := `DELETE FROM users WHERE id = $1`
 
-  res, err := s.db.Exec(query, id)
-  if err != nil {
-    log.Printf("Error deleting user: %v", err)
-    return err
-  }
+	res, err := s.db.Exec(query, id)
+	if err != nil {
+		log.Printf("Error deleting user: %v", err)
+		return err
+	}
 
-  rowsAffected, err := res.RowsAffected()
-  if err != nil {
-    log.Printf("Error getting rows affected: %v", err)
-    return err
-  }
+	rowsAffected, err := res.RowsAffected()
+	if err != nil {
+		log.Printf("Error getting rows affected: %v", err)
+		return err
+	}
 
-  if rowsAffected == 0 {
-    return fmt.Errorf("user with id %d not found", id)
-  }
+	if rowsAffected == 0 {
+		return fmt.Errorf("user with id %d not found", id)
+	}
 
-  log.Printf("Deleted user with id: %d", id)
-  return nil
+	log.Printf("Deleted user with id: %d", id)
+	return nil
+}
+
+func isUniqueConstraintError(err error) bool {
+	return errors.Is(err, gorm.ErrDuplicatedKey)
 }
