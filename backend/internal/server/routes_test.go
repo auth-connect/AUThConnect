@@ -129,7 +129,7 @@ func TestGetUsers(t *testing.T) {
 	reset()
 
 	// Define 2 users
-	users := []models.User{
+	users := []models.InputUser{
 		{Username: "testuser1", Password: "testpassword1", FullName: "test user1", Role: "tester", Email: "test1@example.com"},
 		{Username: "testuser2", Password: "testpassword2", FullName: "test user2", Role: "tester", Email: "test2@example.com"},
 	}
@@ -195,7 +195,7 @@ func TestCreateUser(t *testing.T) {
 	reset()
 
 	// Define 2 users
-	users := []models.User{
+	users := []models.InputUser{
 		{Username: "testuser1", Password: "testpassword1", FullName: "test user1", Role: "tester", Email: "test1@example.com"},
 		{Username: "testuser2", Password: "testpassword2", FullName: "test user2", Role: "tester", Email: "test2@example.com"},
 	}
@@ -248,7 +248,7 @@ func TestUpdateUser(t *testing.T) {
 	reset()
 
 	// Create a user
-	createTestUser(t, models.User{Username: "testuser", Password: "testpassword", FullName: "test user", Role: "tester", Email: "test@example.com"})
+	createTestUser(t, models.InputUser{Username: "testuser", Password: "testpassword", FullName: "test user", Role: "tester", Email: "test@example.com"})
 
 	tests := []struct {
 		name           string
@@ -289,7 +289,7 @@ func TestDeleteUser(t *testing.T) {
 	reset()
 
 	// Define 2 users
-	users := []models.User{
+	users := []models.InputUser{
 		{Username: "testuser1", Password: "testpassword1", FullName: "test user1", Role: "tester", Email: "test1@example.com"},
 		{Username: "testuser2", Password: "testpassword2", FullName: "test user2", Role: "tester", Email: "test2@example.com"},
 	}
@@ -332,7 +332,7 @@ func TestDeleteUser(t *testing.T) {
 	}
 }
 
-func createTestUser(t *testing.T, u models.User) {
+func createTestUser(t *testing.T, u models.InputUser) {
 	requestBody := fmt.Sprintf(`{"username":"%s","password":"%s","full_name":"%s","role":"%s","email":"%s"}`, u.Username, u.Password, u.FullName, u.Role, u.Email)
 	req, err := http.NewRequest("POST", "/users", bytes.NewBufferString(requestBody))
 	if err != nil {

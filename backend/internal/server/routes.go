@@ -96,7 +96,7 @@ func (s *Server) getUser(c *gin.Context) {
 }
 
 func (s *Server) createUser(c *gin.Context) {
-	var body models.User
+	var body models.InputUser
 	if err := c.ShouldBindJSON(&body); err != nil {
 		c.JSON(http.StatusBadRequest, gin.H{"error": "invalid request body"})
 		return
@@ -109,7 +109,7 @@ func (s *Server) createUser(c *gin.Context) {
 
 	// TODO: Hash password
 
-	user := models.User{
+	user := models.InputUser{
 		Username: body.Username,
 		Password: body.Password, // set to hashed password
 		FullName: body.FullName,
@@ -119,6 +119,10 @@ func (s *Server) createUser(c *gin.Context) {
 
 	id, err := s.db.CreateUser(user)
 	if err != nil {
+		if strings.Contains(err.Error(), "already") {
+			c.JSON(http.StatusBadRequest, gin.H{"error": "username or email already in use"})
+			return
+		}
 		c.JSON(http.StatusBadRequest, gin.H{"error": "invalid request body"})
 		return
 	}
@@ -135,7 +139,7 @@ func (s *Server) createUser(c *gin.Context) {
 }
 
 func (s *Server) updateUser(c *gin.Context) {
-	var body models.User
+	var body models.InputUser
 
 	idStr := c.Param("id")
 	id, err := strconv.ParseInt(idStr, 10, 64)
@@ -156,7 +160,7 @@ func (s *Server) updateUser(c *gin.Context) {
 
 	// TODO: Hash password
 
-	user := models.User{
+	user := models.InputUser{
 		Username: body.Username,
 		Password: body.Password, // set to hashed password
 		FullName: body.FullName,
