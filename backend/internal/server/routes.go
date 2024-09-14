@@ -2,7 +2,9 @@ package server
 
 import (
 	"AUThConnect/internal/models"
+	"fmt"
 	"net/http"
+	"os"
 	"strconv"
 	"strings"
 
@@ -16,9 +18,11 @@ var validate = validator.New()
 func (s *Server) RegisterRoutes() http.Handler {
 	r := gin.Default()
 
+	origin := fmt.Sprintf("http://%s", os.Getenv("CORS_URL"))
+
 	// r.Use(cors.Default())
 	r.Use(cors.New(cors.Config{
-		AllowOrigins:     []string{"http://localhost:4200"},                                                                // Allowed origin
+		AllowOrigins:     []string{origin},                                                                                 // Allowed origin
 		AllowMethods:     []string{"GET", "POST", "PUT", "DELETE", "OPTIONS"},                                              // Allowed methods
 		AllowHeaders:     []string{"Origin", "Content-Type", "Authorization", "hx-current-url", "hx-request", "hx-target"}, // Allowed headers
 		AllowCredentials: true,
