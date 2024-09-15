@@ -5,12 +5,12 @@ import (
 	"fmt"
 )
 
-var db map[int]models.User
+var db map[int]models.InputUser
 
 type MockDatabase struct{}
 
 func NewMockDatabase() *MockDatabase {
-	db = make(map[int]models.User)
+	db = make(map[int]models.InputUser)
 
 	return &MockDatabase{}
 }
@@ -49,13 +49,13 @@ func (mdb *MockDatabase) GetUser(id int64) (models.ReturnUser, error) {
 	return user, nil
 }
 
-func (mdb *MockDatabase) CreateUser(user models.User) (int64, error) {
+func (mdb *MockDatabase) CreateUser(user models.InputUser) (int64, error) {
 	id := len(db) + 1
 	db[id] = user
 	return int64(id), nil
 }
 
-func (mdb *MockDatabase) UpdateUser(id int64, user models.User) error {
+func (mdb *MockDatabase) UpdateUser(id int64, user models.InputUser) error {
 	_, ok := db[int(id)]
 	if !ok {
 		return fmt.Errorf("not found")

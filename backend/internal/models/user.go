@@ -1,8 +1,21 @@
 package models
 
-import "fmt"
+import (
+	"fmt"
+	"time"
+)
 
 type User struct {
+	ID             int64     `gorm:"primaryKey"`
+	Username       string    `gorm:"type:varchar(255);uniqueIndex:idx_username_email"` // Index on username
+	HashedPassword string    `gorm:"type:varchar(255);not null"`
+	FullName       string    `gorm:"type:varchar(255);not null"`
+	Role           string    `gorm:"type:varchar(255);not null"`
+	Email          string    `gorm:"type:varchar(255);unique;not null"` // Unique constraint on email
+	CreatedAt      time.Time `gorm:"type:timestamptz;not null;default:CURRENT_TIMESTAMP"`
+}
+
+type InputUser struct {
 	Username string `json:"username"`
 	Password string `json:"password"`
 	FullName string `json:"full_name"`
