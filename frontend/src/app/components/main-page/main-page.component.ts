@@ -1,11 +1,12 @@
 import { CommonModule } from '@angular/common';
 import { Component, computed, input } from '@angular/core';
 import { RouterLink, RouterLinkActive, RouterOutlet } from '@angular/router';
+import { HeaderComponent } from "../shared/header/header.component";
 
 @Component({
   selector: 'app-main-page',
   standalone: true,
-  imports: [CommonModule, RouterOutlet, RouterLink, RouterLinkActive],
+  imports: [CommonModule, RouterOutlet, RouterLink, RouterLinkActive, HeaderComponent],
   templateUrl: './main-page.component.html',
   styleUrl: './main-page.component.scss'
 })
