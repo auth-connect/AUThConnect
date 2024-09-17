@@ -3,6 +3,7 @@ import { UserInterface } from '../../interfaces/user.interface';
 import { HttpClient } from '@angular/common/http';
 import { AuthService } from '../../services/auth-service/auth.service';
 import { Router } from '@angular/router';
+import { environment } from '../../../environment/environment';
 
 @Injectable({
     providedIn: 'root',
@@ -12,11 +13,13 @@ export class AuthFacade {
     router = inject(Router);
     authService = inject(AuthService);
 
+    apiUrl = `${environment.apiUrl}/users`;
+
     // TODO Create actions
     loginUser(user: UserInterface) {
         this.http
             .post<{ user: UserInterface }>(
-                'https://api.realworld.io/api/users/login',
+                this.apiUrl,
                 {
                     user: user,
                 }
@@ -32,7 +35,7 @@ export class AuthFacade {
 
     getUser(){
         this.http
-              .get<{ user: UserInterface }>('https://api.realworld.io/api/user')
+              .get<{ user: UserInterface }>(this.apiUrl)
               .subscribe({
                 next: (response) => {
                   console.log('response', response);
