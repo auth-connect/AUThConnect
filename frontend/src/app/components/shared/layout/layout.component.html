@@ -4,14 +4,15 @@
     (changeIsSidebarCollapsed)="changeIsSidebarCollapsed($event)"
   />
 
-  <nav class="block w-full max-w-full bg-transparent text-white shadow-none rounded-xl transition-all px-0 py-1">
-    <app-header/>
-  </nav>
+
 
   <div class="body" [ngClass]="sizeClass()">
+    <nav class="block w-full max-w-full bg-transparent text-white shadow-none rounded-xl transition-all px-0 py-1">
+      <app-header/>
+    </nav>
+    
     <router-outlet />
   </div>
-
 </main>
 
 
