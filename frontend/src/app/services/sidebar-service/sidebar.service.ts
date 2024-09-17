@@ -35,11 +35,6 @@ export class SidebarService {
       icon: 'bootstrapQuestion',
       label: 'About',
     },
-    {
-      routeLink: 'login',
-      icon: '',
-      label: 'Login',
-    },
   ];
 
   constructor() {}
