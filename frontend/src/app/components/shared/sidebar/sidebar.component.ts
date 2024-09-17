@@ -5,7 +5,7 @@ import { RouterLink, RouterModule, RouterOutlet } from '@angular/router';
 import { NgIconComponent, provideIcons, provideNgIconsConfig } from '@ng-icons/core';
 import { featherBook, featherHome, featherMessageCircle,  } from '@ng-icons/feather-icons';
 import { bootstrapQuestion } from '@ng-icons/bootstrap-icons'
-import { RouteInterface, SidebarService } from '../../services/sidebar-service/sidebar.service';
+import { RouteInterface, SidebarService } from '../../../services/sidebar-service/sidebar.service';
 
 @Component({
   selector: 'app-sidebar',
