@@ -16,7 +16,8 @@ import (
 var validate = validator.New()
 
 func (s *Server) RegisterRoutes() http.Handler {
-	r := gin.Default()
+	r := gin.New()
+	g := r.Group("/api/v1")
 
 	origin := fmt.Sprintf("http://%s", os.Getenv("CORS_URL"))
 
@@ -28,13 +29,13 @@ func (s *Server) RegisterRoutes() http.Handler {
 		AllowCredentials: true,
 	}))
 
-	r.GET("/", s.helloWorldHandler)
-	r.GET("/health", s.healthHandler)
-	r.GET("/users", s.getUsers)
-	r.GET("/users/:id", s.getUser)
-	r.POST("/users", s.createUser)
-	r.PUT("/users/:id", s.updateUser)
-	r.DELETE("/users/:id", s.deleteUser)
+	g.GET("/", s.helloWorldHandler)
+	g.GET("/health", s.healthHandler)
+	g.GET("/users", s.getUsers)
+	g.GET("/users/:id", s.getUser)
+	g.POST("/users", s.createUser)
+	g.PUT("/users/:id", s.updateUser)
+	g.DELETE("/users/:id", s.deleteUser)
 
 	return r
 }
