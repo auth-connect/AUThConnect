@@ -26,18 +26,21 @@
                 id="password"
                 formControlName="password"
                 autocomplete="off" />
-            <button
-                [disabled]="isLoading()"
-                class="w-full mt-2"
-                type="submit">
-                @if (isLoading()) {
-                    <ng-icon name="lucideLoaderCircle" class="mr-2 animate-spin" />
-                }
-                @else{
-                    Sign In
-                }
-                
-            </button>
+            <div class="flex items-center justify-center">
+
+                <button
+                    [disabled]="isLoading()"
+                    class="flex bg-zinc-800 items-center justify-center border border-zinc-800 rounded-full h-10 w-40 px-4 py-5 mt-2"
+                    type="submit">
+                    @if (isLoading()) {
+                        <ng-icon name="lucideLoaderCircle" class="animate-spin" />
+                    }
+                    @else{
+                        <span class="text-white">Sign In</span>
+                    }
+                    
+                </button>
+            </div>
         </form>
         <div class="relative">
             <div class="absolute inset-0 flex items-center"><span class="w-full border-t"></span></div>
@@ -45,14 +48,17 @@
                 <span class="bg-background text-muted-foreground px-2">Or continue with</span>
             </div>
         </div>
-        <button class="flex items-center justify-center" [disabled]="isLoading()">
-            @if (isLoading()) {
-              <ng-icon name="lucideLoaderCircle" class="mr-2 animate-spin" />
-            } @else {
-              <ng-icon class="mr-2" name="lucideGithub" />
-            }
-            <span class="sidenav-link-text">GitHub</span>
-          </button>
+        <div class="flex items-center justify-center">
+            <button class="flex bg-zinc-800 items-center justify-center border border-zinc-800 rounded-full h-10 w-40 px-4 py-5" [disabled]="isLoadingGithub()">
+                @if (isLoadingGithub()) {
+                  <ng-icon name="lucideLoaderCircle" class="mr-2 animate-spin" />
+                } @else {
+                  <ng-icon class="mr-2" name="lucideGithub" />
+                }
+                <span class="text-white">GitHub</span>
+              </button>
+        </div>
+        
     </div>
     <p class="text-muted-foreground sm:px-8 text-center text-sm">
         By clicking continue, you agree to our

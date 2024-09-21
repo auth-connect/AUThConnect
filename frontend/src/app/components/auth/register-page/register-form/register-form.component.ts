@@ -20,7 +20,7 @@ import { AuthFacade } from '../../../../facades/auth-facade/auth-facade.service'
     provideIcons({ lucideLoaderCircle, lucideGithub }), 
     provideNgIconsConfig({
       size: '1.7em',
-      color: 'black',
+      color: 'white',
     }),
   ],
   templateUrl: './register-form.component.html',
