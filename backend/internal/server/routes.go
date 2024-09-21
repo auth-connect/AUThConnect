@@ -16,7 +16,8 @@ import (
 var validate = validator.New()
 
 func (s *Server) RegisterRoutes() http.Handler {
-	r := gin.Default()
+	r := gin.New()
+	// g := r.Group("/api/v1")
 
 	origin := fmt.Sprintf("http://%s", os.Getenv("CORS_URL"))
 
