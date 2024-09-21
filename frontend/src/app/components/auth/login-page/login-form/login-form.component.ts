@@ -7,7 +7,7 @@ import {
   Validators,
 } from '@angular/forms';
 import { NgIconComponent, provideIcons, provideNgIconsConfig } from '@ng-icons/core';
-import { lucideLoader } from '@ng-icons/lucide';
+import { lucideLoaderCircle, lucideGithub } from '@ng-icons/lucide';
 import { AuthService } from '../../../../services/auth-service/auth.service';
 import { UserInterface } from '../../../../interfaces/user.interface';
 import { AuthFacade } from '../../../../facades/auth-facade/auth-facade.service';
@@ -17,10 +17,10 @@ import { AuthFacade } from '../../../../facades/auth-facade/auth-facade.service'
   standalone: true,
   imports: [NgIconComponent, ReactiveFormsModule],
   viewProviders: [
-    provideIcons({ lucideLoader }), 
+    provideIcons({ lucideLoaderCircle, lucideGithub }), 
     provideNgIconsConfig({
       size: '1.7em',
-      color: '#d2d3d5',
+      color: 'black',
     }),
   ],
   templateUrl: './login-form.component.html',
@@ -61,7 +61,7 @@ export class LoginFormComponent implements OnInit {
     const user: UserInterface = this.form.getRawValue()
 
     console.log(user);
-    this.authFacade.loginUser(user);
+    // this.authFacade.loginUser(user);
   }
 
 }
