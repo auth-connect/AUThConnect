@@ -7,19 +7,23 @@ export const routes: Routes = [
     children: [
         {
           path: 'home',
-          loadComponent: () => import('./components/pages/home/home.component').then(m => m.HomeComponent)
+          loadComponent: () => import('./components/pages/home/home.component').then(m => m.HomeComponent),
+          data: { title: 'Home' },
         },
         {
           path: 'threads',
-          loadComponent: () => import('./components/pages/threads/threads.component').then(m => m.ThreadsComponent)
+          loadComponent: () => import('./components/pages/threads/threads.component').then(m => m.ThreadsComponent),
+          data: { title: 'Threads' },
         },
         {
           path: 'courses',
-          loadComponent: () => import('./components/pages/courses/courses.component').then(m => m.CoursesComponent)
+          loadComponent: () => import('./components/pages/courses/courses.component').then(m => m.CoursesComponent),
+          data: { title: 'Courses' },
         },
         {
           path: 'about',
-          loadComponent: () => import('./components/pages/about/about.component').then(m => m.AboutComponent)
+          loadComponent: () => import('./components/pages/about/about.component').then(m => m.AboutComponent),
+          data: { title: 'About' },
         },
         {
           path: 'form',
