@@ -1,3 +1,15 @@
 * {
   font-family: 'Source Sans Pro', sans-serif;
-}
+} 
+
+
+  
+  .body-trimmed {
+    width: calc(100% - 15rem);
+    margin-left: 15rem;
+  }
+  
+  .body-md-screen {
+    width: calc(100% - 15rem);
+    margin-left: 15rem;
+  }

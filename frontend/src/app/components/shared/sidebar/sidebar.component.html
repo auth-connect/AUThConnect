@@ -1,11 +1,11 @@
 <div
-  class="bg-gradient-to-br from-gray-800 to-gray-900 fixed inset-0 z-50 my-4 ml-4 h-[calc(100vh-32px)] w-[15rem] rounded-xl transition-transform duration-300 xl:translate-x-0"
+  class="bg-gradient-to-br from-gray-700 to-gray-800 fixed inset-0 z-50 h-screen w-[15rem] transition-transform duration-300 xl:translate-x-0"
   [ngClass]="isSidebarCollapsed() ? 'sidenav-collapsed' : ''"
 >
 
 
   <div class="relative border-b border-white/20">
-    <div class="flex items-center py-4 gap-4 px-6">
+    <div class="flex items-center py-4 gap-4 px-4 h-20">
       <div class="cursor-pointer flex items-center justify-center" (click)="toggleCollapse()">
         <svg viewBox="0 0 64.81481481481481 51.358802333938" class="w-10 h-10 fill-current text-white">
           <g transform="translate(-19.51634488689644, -25.67940312615183) scale(1.02717604667876)">
@@ -23,16 +23,16 @@
     @for (item of items; track $index) {
       <li class="w-full">
         <a
-          class="middle none font-bold center transition-all disabled:opacity-50 disabled:shadow-none disabled:pointer-events-none rounded-lg hover:bg-white/10 active:bg-white/30 flex w-full items-center gap-4 px-6 py-4 capitalize"
+          class="middle none font-bold center transition-all disabled:opacity-50 disabled:shadow-none disabled:pointer-events-none rounded-lg hover:bg-white/10 active:bg-white/30 flex w-full items-center gap-4 px-4 py-4 capitalize"
           [routerLink]="item.routeLink"
-          routerLinkActive="bg-gray-700 shadow-md active:opacity-[0.9]"
+          routerLinkActive="bg-gray-600 shadow-md active:opacity-[0.9]"
           [routerLinkActiveOptions]="{ exact: true }"
         >
         <div class="flex justify-center items-center w-10 h-10"> 
           <ng-icon [name]="item.icon"></ng-icon>
         </div>
           @if (!isSidebarCollapsed()) {
-            <span class="text-white text-">{{ item.label }}</span>
+            <span class="text-white">{{ item.label }}</span>
           }
 
           

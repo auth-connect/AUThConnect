@@ -34,10 +34,10 @@ export class LayoutComponent implements OnInit{
 
   
   sizeClass = computed(() => {
-    const isSidebarCollapsed = this.isSidebarCollapsed();
-    if (isSidebarCollapsed) {
+    const isLeftSidebarCollapsed = this.isSidebarCollapsed();
+    if (isLeftSidebarCollapsed) {
       return '';
     }
-    return this.screenWidth() > 768 ? 'w-[calc(100%-16rem)] ml-[16rem]' : 'w-[calc(100%-16rem)] ml-[16rem]';
+    return this.screenWidth() > 768 ? 'body-trimmed' : 'body-md-screen';
   });
 }
