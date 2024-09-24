@@ -7,7 +7,7 @@ import {
   ReactiveFormsModule,
   Validators,
 } from '@angular/forms';
-import { environment } from '../../../environment/environment';
+import { environment } from '../../../../environment/environment';
 
 export interface Payload {
   username: string;
