@@ -25,8 +25,6 @@ export const routes: Routes = [
           path: 'form',
           loadComponent: () => import('./components/pages/test-form/test-form.component').then(m => m.TestFormComponent)
         },
-
-
         {
             path: '',
             redirectTo: 'home',
