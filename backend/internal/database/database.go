@@ -50,7 +50,7 @@ var (
 	dbInstance *service
 )
 
-func InitializeDatabase() {
+func initializeDatabase() {
 	if err := gormDB.AutoMigrate(models.User{}); err != nil {
 		log.Fatalf("Error running migrations: %v", err)
 	}
@@ -59,6 +59,16 @@ func InitializeDatabase() {
 	if err != nil {
 		log.Fatalf("Error adding unique constraint: %v", err)
 	}
+}
+
+func (s *service) checkTableConstraintExist(schema, tableName, constraintName string) (bool, error) {
+	var exists bool
+	query := `SELECT EXISTS (
+    SELECT 1 FROM information_schema.tables WHERE table_schema = $1 AND table_name = $2 AND constraint_name = $3
+  );`
+	err := s.db.QueryRow(query, schema, tableName, constraintName).Scan(&exists)
+
+	return exists, err
 }
 
 func New() Service {
@@ -81,11 +91,13 @@ func New() Service {
 	db.SetMaxIdleConns(25)                 // Maximum number of idle connections
 	db.SetConnMaxLifetime(5 * time.Minute) // Maximum lifetime of a connection
 
-	InitializeDatabase()
-
 	dbInstance = &service{
 		db: db,
 	}
+
+	dbInstance.checkTableConstraintExist(schema, "users", "unique_username_email")
+	initializeDatabase()
+
 	return dbInstance
 }
 
