@@ -6,7 +6,7 @@ export const routes: Routes = [
     loadComponent: () => import('./components/shared/layout/layout.component').then(m => m.LayoutComponent),
     children: [
         {
-          path: 'home',
+          path: '',
           loadComponent: () => import('./components/pages/home/home.component').then(m => m.HomeComponent),
           data: { title: 'Home' },
         },
@@ -28,12 +28,6 @@ export const routes: Routes = [
         {
           path: 'form',
           loadComponent: () => import('./components/pages/test-form/test-form.component').then(m => m.TestFormComponent)
-        },
-
-        {
-            path: '',
-            redirectTo: 'home',
-            pathMatch: 'full'
         },
 
       ]
