@@ -1,12 +1,18 @@
 package main
 
-import "net/http"
+import (
+	"net/http"
 
-func (app *application) registerRoutes() http.Handler {
-	mux := http.ServeMux{}
+	"github.com/julienschmidt/httprouter"
+)
 
-	mux.HandleFunc("/health", app.healthHandler)
-	mux.HandleFunc("/", app.getUser)
+func (app *application) registerRoutes() *httprouter.Router {
+	router := httprouter.New()
 
-	return &mux
+	router.HandlerFunc(http.MethodGet, "/v1/health", app.healthHandler)
+	router.HandlerFunc(http.MethodGet, "/v1/users/:id", app.getUser)
+	router.HandlerFunc(http.MethodPost, "/v1/users", app.createUser)
+	router.HandlerFunc(http.MethodPut, "/v1/users/:id", app.updateUser)
+
+	return router
 }
