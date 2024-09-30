@@ -1,7 +1,7 @@
 package main
 
 import (
-	"AUThConnect/internal/models"
+	"AUThConnect/internal/database"
 	"context"
 	"database/sql"
 	"flag"
@@ -29,7 +29,7 @@ type config struct {
 type application struct {
 	config config
 	logger *log.Logger
-	models models.Models
+	models database.Models
 }
 
 func main() {
@@ -57,7 +57,7 @@ func main() {
 	app := &application{
 		config: cfg,
 		logger: logger,
-		models: models.NewModels(db),
+		models: database.NewModels(db),
 	}
 
 	server := &http.Server{

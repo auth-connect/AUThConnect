@@ -6,13 +6,12 @@ import (
 	"github.com/julienschmidt/httprouter"
 )
 
-func (app *application) registerRoutes() *httprouter.Router {
+func (app *application) registerRoutes() http.Handler {
 	router := httprouter.New()
 
-	router.HandlerFunc(http.MethodGet, "/v1/health", app.healthHandler)
-	router.HandlerFunc(http.MethodGet, "/v1/users/:id", app.getUser)
-	router.HandlerFunc(http.MethodPost, "/v1/users", app.createUser)
-	router.HandlerFunc(http.MethodPut, "/v1/users/:id", app.updateUser)
+	router.HandlerFunc(http.MethodGet, "/v1/health", app.health)
+	router.HandlerFunc(http.MethodPost, "/v1/users/register", app.registerUser)
+	// router.HandlerFunc(http.MethodPut, "/v1/users/activate", app.activateUser)
 
-	return router
+	return app.recoverPanic(router)
 }

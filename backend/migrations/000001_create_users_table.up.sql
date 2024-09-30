@@ -1,11 +1,12 @@
 CREATE TABLE IF NOT EXISTS users (
   id BIGSERIAL PRIMARY KEY,
-  user_name VARCHAR UNIQUE NOT NULL,
-  hashed_password CHAR(60) NOT NULL,
-  full_name VARCHAR NOT NULL,
+  name VARCHAR UNIQUE NOT NULL,
+  hashed_password BYTEA NOT NULL,
   role VARCHAR(30) NOT NULL DEFAULT 'Member',
-  email VARCHAR UNIQUE NOT NULL,
-  created_at TIMESTAMP(0) with time zone NOT NULL DEFAULT NOW()
+  email CITEXT UNIQUE NOT NULL,
+  activated BOOL NOT NULL,
+  version INTEGER NOT NULL DEFAULT 1,
+  created_at TIMESTAMP(0) WITH TIME ZONE NOT NULL DEFAULT NOW()
 );
 
-ALTER TABLE users ADD CONSTRAINT unique_username_email UNIQUE (user_name, email);
+ALTER TABLE users ADD CONSTRAINT unique_name_email UNIQUE (name, email);

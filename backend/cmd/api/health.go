@@ -2,7 +2,7 @@ package main
 
 import "net/http"
 
-func (app *application) healthHandler(w http.ResponseWriter, r *http.Request) {
+func (app *application) health(w http.ResponseWriter, r *http.Request) {
 	message := envelope{
 		"status": "available",
 		"system_info": map[string]string{
