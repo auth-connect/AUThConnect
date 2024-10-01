@@ -4,6 +4,7 @@ import (
 	"AUThConnect/internal/database"
 	"AUThConnect/internal/validator"
 	"errors"
+	"fmt"
 	"net/http"
 )
 
@@ -43,7 +44,7 @@ func (app *application) registerUser(w http.ResponseWriter, r *http.Request) {
 	if err != nil {
 		switch {
 		case errors.Is(err, database.ErrUsernameOrEmailExists):
-			v.AddError("email", "a user with this username/email address already exists")
+			v.AddError("name", "a user with this name/email address already exists")
 			app.failedValidationResponse(w, r, v.Errors)
 		default:
 			app.serverErrorResponse(w, r, err)
@@ -57,8 +58,31 @@ func (app *application) registerUser(w http.ResponseWriter, r *http.Request) {
 	}
 }
 
-// func (app *application) activateUser(w http.ResponseWriter, r *http.Request) {
-//   var input struct {
-//
-//   }
-// }
+func (app *application) activateUser(w http.ResponseWriter, r *http.Request) {
+	// var input struct {
+	// }
+
+	app.serverErrorResponse(w, r, fmt.Errorf("not implemented yet"))
+}
+
+func (app *application) loginUser(w http.ResponseWriter, r *http.Request) {
+	var input struct {
+		Name     string `json:"name"`
+		Password string `json:"password"`
+	}
+
+	err := app.jsonRead(w, r, &input)
+	if err != nil {
+		app.badRequestResponse(w, r, err)
+		return
+	}
+
+	v := validator.New()
+
+	if database.ValidateLogin(v, input.Name, input.Password); !v.Valid() {
+		app.failedValidationResponse(w, r, v.Errors)
+		return
+	}
+
+	app.jsonWrite(w, envelope{"message": fmt.Sprintf("logged in as user %s successfully", input.Name)}, http.StatusOK, nil)
+}

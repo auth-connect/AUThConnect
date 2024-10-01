@@ -66,13 +66,20 @@ func ValidatePassword(v *validator.Validator, password string) {
 
 func ValidateUser(v *validator.Validator, user *User) {
 	v.Check(user.Name != "", "name", "must be provided")
-	v.Check(len(user.Name) <= 500, "name", "must not be more than 500 characters long")
+	v.Check(len(user.Name) <= 50, "name", "must not be more than 50 characters long")
 
 	ValidateEmail(v, user.Email)
 
 	if user.Password.text == nil {
 		panic("missing password hash for user")
 	}
+}
+
+func ValidateLogin(v *validator.Validator, name, password string) {
+	v.Check(name != "", "name", "must be provided")
+	v.Check(len(name) <= 50, "name", "must not be more than 50 characters")
+
+	ValidatePassword(v, password)
 }
 
 type UserModel struct {

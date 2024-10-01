@@ -36,5 +36,5 @@ func (app *application) badRequestResponse(w http.ResponseWriter, r *http.Reques
 }
 
 func (app *application) failedValidationResponse(w http.ResponseWriter, r *http.Request, errors map[string]string) {
-	app.errorResponse(w, r, errors, http.StatusUnprocessableEntity)
+	app.errorResponse(w, r, envelope{"errors": errors}, http.StatusUnprocessableEntity)
 }
