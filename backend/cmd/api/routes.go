@@ -13,5 +13,5 @@ func (app *application) registerRoutes() http.Handler {
 	router.HandlerFunc(http.MethodPost, "/v1/users/register", app.registerUser)
 	// router.HandlerFunc(http.MethodPut, "/v1/users/activate", app.activateUser)
 
-	return app.recoverPanic(router)
+	return app.recoverPanic(app.enableCORS(router))
 }

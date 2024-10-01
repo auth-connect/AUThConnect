@@ -2,13 +2,12 @@ package main
 
 import (
 	"AUThConnect/internal/database"
+	"AUThConnect/internal/logger"
 	"context"
 	"database/sql"
 	"flag"
-	"fmt"
-	"log"
-	"net/http"
 	"os"
+	"sync"
 	"time"
 
 	_ "github.com/lib/pq"
@@ -28,8 +27,9 @@ type config struct {
 
 type application struct {
 	config config
-	logger *log.Logger
+	logger *logger.Logger
 	models database.Models
+	wg     sync.WaitGroup
 }
 
 func main() {
@@ -44,15 +44,15 @@ func main() {
 	flag.StringVar(&cfg.db.maxIdleTime, "db-max-idle-time", "15m", "PostgreSQL max connection life time")
 	flag.Parse()
 
-	logger := log.New(os.Stdout, "", log.Ldate|log.Ltime)
+	logger := logger.New(os.Stdout, logger.LevelInfo)
 
 	db, err := OpenDB(cfg)
 	if err != nil {
-		logger.Fatal(err)
+		logger.PrintFatal(err, nil)
 	}
 
 	defer db.Close()
-	logger.Printf("database conenction pool established")
+	logger.PrintInfo("database conenction pool established", nil)
 
 	app := &application{
 		config: cfg,
@@ -60,16 +60,10 @@ func main() {
 		models: database.NewModels(db),
 	}
 
-	server := &http.Server{
-		Addr:         fmt.Sprintf(":%d", cfg.port),
-		Handler:      app.registerRoutes(),
-		IdleTimeout:  time.Minute,
-		ReadTimeout:  10 * time.Second,
-		WriteTimeout: 30 * time.Second,
+	err = app.serve()
+	if err != nil {
+		logger.PrintFatal(err, nil)
 	}
-
-	logger.Printf("starting %s server on port %s", cfg.env, server.Addr)
-	logger.Fatal(server.ListenAndServe())
 }
 
 func OpenDB(cfg config) (*sql.DB, error) {
