@@ -13,7 +13,7 @@ import { AuthFacade } from './facades/auth-facade/auth-facade.service';
 })
 export class AppComponent implements OnInit {
 
-  title = 'frontend';
+  title = 'AUTHCONNECT';
 
   authService = inject(AuthService);
   authFacade = inject(AuthFacade);
