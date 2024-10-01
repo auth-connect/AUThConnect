@@ -16,7 +16,7 @@ export class SidebarService {
 
   private items: RouteInterface[] = [
     {
-      routeLink: 'home',
+      routeLink: '',
       icon: 'featherHome',
       label: 'Home',
     },
