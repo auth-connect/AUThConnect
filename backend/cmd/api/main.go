@@ -3,6 +3,7 @@ package main
 import (
 	"AUThConnect/internal/database"
 	"AUThConnect/internal/logger"
+	"AUThConnect/internal/mail"
 	"context"
 	"database/sql"
 	"flag"
@@ -23,6 +24,16 @@ type config struct {
 		maxConnLifetime string
 		maxIdleTime     string
 	}
+	jwt struct {
+		secret string
+	}
+	smtp struct {
+		host     string
+		port     int
+		username string
+		password string
+		sender   string
+	}
 }
 
 type application struct {
@@ -30,6 +41,7 @@ type application struct {
 	logger *logger.Logger
 	models database.Models
 	wg     sync.WaitGroup
+	mail   mail.Mail
 }
 
 func main() {
@@ -42,6 +54,12 @@ func main() {
 	flag.IntVar(&cfg.db.maxIdleConns, "db-max-idle-conns", 25, "PostgreSQL max idle connections")
 	flag.StringVar(&cfg.db.maxConnLifetime, "db-max-conn-life-time", "5m", "PostgreSQL max connection life time")
 	flag.StringVar(&cfg.db.maxIdleTime, "db-max-idle-time", "15m", "PostgreSQL max connection life time")
+	flag.StringVar(&cfg.jwt.secret, "jwt-secret", "", "JWT secret")
+	flag.StringVar(&cfg.smtp.host, "smtp-host", "auth-connect.gr", "SMTP host")
+	flag.IntVar(&cfg.smtp.port, "smtp-port", 25, "SMTP port")
+	flag.StringVar(&cfg.smtp.username, "smtp-username", "mailuser", "SMTP username")
+	flag.StringVar(&cfg.smtp.password, "smtp-password", "password", "SMTP password")
+	flag.StringVar(&cfg.smtp.sender, "smtp-sender", "AUThConnect <no-reply@auth-connect.gr>", "SMTP sender")
 	flag.Parse()
 
 	logger := logger.New(os.Stdout, logger.LevelInfo)
@@ -58,6 +76,7 @@ func main() {
 		config: cfg,
 		logger: logger,
 		models: database.NewModels(db),
+		mail:   mail.New(cfg.smtp.host, cfg.smtp.port, cfg.smtp.username, cfg.smtp.password, cfg.smtp.sender),
 	}
 
 	err = app.serve()
