@@ -8,5 +8,5 @@ spec:
     - ReadWriteOnce
   resources:
     requests:
-      storage: {{.Values.postgres.persistence.size}}
+      storage: {{.Values.persistence.size}}
   storageClassName: {{.Values.persistence.storageClass | quote}}

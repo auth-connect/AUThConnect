@@ -15,28 +15,28 @@ spec:
     spec:
       containers:
         - name: postgres
-          image: "{{.Values.postgres.image}}:{{.Values.postgres.tag}}"
+          image: "{{.Values.image}}:{{.Values.tag}}"
           env:
             - name: POSTGRES_USER
               valueFrom:
                 secretKeyRef:
-                  name: {{.Values.secret}}
+                  name: {{include "postgres.fullname" .}}-secret
                   key: postgres-user
             - name: POSTGRES_PASSWORD
               valueFrom:
                 secretKeyRef:
-                  name: {{.Values.secret}}
+                  name: {{include "postgres.fullname" .}}-secret
                   key: postgres-password
             - name: POSTGRES_DB
-              value: {{.Values.postgres.database}}
+              value: authconnect
             - name: PGDATA
               value: /var/lib/postgresql/data/pgdata
           ports:
-            - containerPort: {{.Values.postgres.port}}
+            - containerPort: {{.Values.port}}
           volumeMounts:
-            - name: {{.Values.volumeMount}}
+            - name: postgres-storage
               mountPath: /var/lib/postgresql/data
       volumes:
-        - name: {{.Values.volumeMount}}
+        - name: postgres-storage
           persistentVolumeClaim:
-            claimName: {{.Values.pvc}}
+            claimName: {{ include "postgres.fullname" . }}-pvc
