@@ -6,20 +6,15 @@ metadata:
 spec:
   template:
     spec:
+      imagePullSecrets:
+      - name: my-registry-secret
       containers:
       - name: migration
-        image: migrate/migrate:latest
+        image: authconnect/migrate:latest
         command: [
           "migrate",
           "-path=/migrations",
           "-database=postgres://{{ .Values.username }}:{{ .Values.password }}@postgres:{{ .Values.port }}/authconnect?sslmode=disable",
           "up"
         ]
-        volumeMounts:
-        - name: migration-volume
-          mountPath: /migrations
       restartPolicy: OnFailure
-      volumes:
-      - name: migration-volume
-        hostPath:
-          path: {{ .Values.migrations.path }}
