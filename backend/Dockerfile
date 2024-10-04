@@ -14,7 +14,7 @@ RUN go mod tidy
 COPY . .
 
 # Build the Go application
-RUN go build -o backend ./cmd/api/main.go
+RUN go build -ldflags='-s -w' -o backend ./cmd/api/
 
 # Stage 2: Run
 FROM alpine:3.19
