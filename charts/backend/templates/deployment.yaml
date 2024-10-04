@@ -29,15 +29,15 @@ spec:
         - name: ENV
           valueFrom:
             configMapKeyRef:
-              name: {{ include "auth-connect.fullname" . }}-config
+              name: backend-config
               key: ENV
         - name: DSN
           valueFrom:
             configMapKeyRef:
-              name: {{ include "auth-connect.fullname" . }}-config
+              name: backend-config
               key: DSN
         - name: JWT
           valueFrom:
             configMapKeyRef:
-              name: {{ include "auth-connect.fullname" . }}-config
+              name: backend-config
               key: JWT
