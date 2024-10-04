@@ -10,5 +10,5 @@ spec:
       protocol: TCP
       name: http
   selector:
-    app: {{include "auth-connect.name" .}}
+    app: backend
     tier: backend

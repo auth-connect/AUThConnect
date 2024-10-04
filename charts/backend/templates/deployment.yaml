@@ -3,19 +3,19 @@ kind: Deployment
 metadata:
   name:  backend
   labels:
-    app: postgres
+    app: backend
     tier: backend
   namespace: backend
 spec:
   replicas: {{ .Values.replicaCount }}
   selector:
     matchLabels:
-      app: postgres
+      app: backend
       tier: backend
   template:
     metadata:
       labels:
-        app: postgres
+        app: backend
         tier: backend
     spec:
       imagePullSecrets:
