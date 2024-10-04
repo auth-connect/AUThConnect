@@ -1,5 +1,5 @@
 apiVersion: v2
-name: auth-connect-postgres
+name: auth-connect-backend
 description: The official Helm chart for deploying AUThConnect backend
 version: 0.1.0
 appVersion: "1.0"

@@ -1,9 +1,9 @@
-kind: ConfigMap
 apiVersion: v1
+kind: ConfigMap
 metadata:
   name: {{ include "auth-connect.fullname" . }}-config
   namespace: backend
 data:
-  {{- range $key, $value := .Values.env -}}
+  {{- range $key, $value := .Values.env }}
   {{ $key }}: {{ $value | quote }}
-  {{- end -}}
+  {{- end }}

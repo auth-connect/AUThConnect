@@ -18,6 +18,8 @@ spec:
         app: postgres
         tier: backend
     spec:
+      imagePullSecrets:
+      - name: my-registry-secret
       containers:
       - name: backend
         image: "{{ .Values.image.repository }}:{{ .Values.image.tag }}"
@@ -26,16 +28,16 @@ spec:
         env:
         - name: ENV
           valueFrom:
-            configMapRef:
-              name: {{ include "auth-connect.fullname" . }}--config
+            configMapKeyRef:
+              name: {{ include "auth-connect.fullname" . }}-config
               key: ENV
         - name: DSN
           valueFrom:
-            configMapRef:
-              name: {{ include "auth-connect.fullname" . }}--config
+            configMapKeyRef:
+              name: {{ include "auth-connect.fullname" . }}-config
               key: DSN
         - name: JWT
           valueFrom:
-            configMapRef:
-              name: {{ include "auth-connect.fullname" . }}--config
+            configMapKeyRef:
+              name: {{ include "auth-connect.fullname" . }}-config
               key: JWT
