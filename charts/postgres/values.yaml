@@ -6,3 +6,5 @@ persistence:
   storageClass: default
 username: authconnect
 password: authconnect2024
+migrations:
+  path: ../../backend/migrations

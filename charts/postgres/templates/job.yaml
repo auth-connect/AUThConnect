@@ -1,0 +1,24 @@
+apiVersion: batch/v1
+kind: Job
+metadata:
+  name: migration
+  namespace: postgres
+spec:
+  template:
+    containers:
+    - name: migration
+      image: migrate/migrate:latest
+      command: [
+        "migrate",
+        "-path=/migrations",
+        "-database=postgres://{{ .Values.username }}:{{ .Values.password }}@postgres:{{ .Values.port }}/authconnect?sslmode=disable",
+        "up"
+      ]
+      volumeMounts:
+      - name: migration-volume
+        mountPath: /migrations
+      restartPolicy: OnFailure
+      volumes:
+      - name: migration-volume
+        hostPath:
+          path: {{ .Values.migrations.path }}
