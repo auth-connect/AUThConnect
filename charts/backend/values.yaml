@@ -1,0 +1,13 @@
+replicaCount: 2
+image:
+  repository: authconnect
+  tag: 0.1.0
+port: 8000
+env:
+  ENV: production
+  DSN: postgres://authconnect:authconnect2024@postgres.postgres.svc.cluster.local:5432/authconnect?sslmode=disable
+  JWT: PEgCMaqOZ8NJsy6IXPdzIMRwPxvRWQafcNmUtveTDOSxGOInVh3j6zcgLgKEocqW
+service:
+  type: ClusterIP
+  # TargetPort
+  port: 8000

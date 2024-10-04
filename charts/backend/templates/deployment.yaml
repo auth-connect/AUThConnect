@@ -1,0 +1,41 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: {{ include "auth-connect.fullname" . }}
+  labels:
+    app: postgres
+    tier: backend
+  namespace: backend
+spec:
+  replicas: {{ .Values.replicaCount }}
+  selector:
+    matchLabels:
+      app: postgres
+      tier: backend
+  template:
+    metadata:
+      labels:
+        app: postgres
+        tier: backend
+    spec:
+      containers:
+      - name: backend
+        image: "{{ .Values.image.repository }}:{{ .Values.image.tag }}"
+        ports:
+        - containerPort: {{ .Values.port }}
+        env:
+        - name: ENV
+          valueFrom:
+            configMapRef:
+              name: {{ include "auth-connect.fullname" . }}--config
+              key: ENV
+        - name: DSN
+          valueFrom:
+            configMapRef:
+              name: {{ include "auth-connect.fullname" . }}--config
+              key: DSN
+        - name: JWT
+          valueFrom:
+            configMapRef:
+              name: {{ include "auth-connect.fullname" . }}--config
+              key: JWT

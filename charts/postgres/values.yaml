@@ -1,0 +1,8 @@
+image: postgres
+tag: 16
+port: 5432
+persistence:
+  size: 16Gi
+  storageClass: default
+username: authconnect
+password: authconnect2024
