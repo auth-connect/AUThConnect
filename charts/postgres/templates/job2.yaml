@@ -12,7 +12,7 @@ spec:
         command: [
           "migrate",
           "-path=/migrations",
-          "-database=postgres://{{ .Values.username }}:{{ .Values.password }}@postgres:{{ .Values.port }}/authconnect?sslmode=disable",
+          "-database=postgres://authconnect:authconnect2024@postgres:5432/authconnect?sslmode=disable",
           "up"
         ]
         volumeMounts:
@@ -22,4 +22,4 @@ spec:
       volumes:
       - name: migration-volume
         hostPath:
-          path: {{ .Values.migrations.path }}
+          path: migrations
