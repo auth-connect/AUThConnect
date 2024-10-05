@@ -1,29 +1,18 @@
 <form [formGroup]="testForm" (ngSubmit)="onSubmit(testForm)">
-    <div>
-      <label for="username">username:</label>
-      <input id="username" formControlName="username" />
-    </div>
-  
-    <div>
-      <label for="email">Email:</label>
-      <input id="email" formControlName="email" />
-    </div>
-  
-    <div>
-      <label for="password">Password:</label>
-      <input type="password" id="password" formControlName="password" />
-    </div>
+  <div>
+    <label for="name">name:</label>
+    <input id="name" formControlName="name" />
+  </div>
 
+  <div>
+    <label for="email">Email:</label>
+    <input id="email" formControlName="email" />
+  </div>
 
-      <div>
-        <label for="full_name">Full Name:</label>
-        <input type="full_name" id="full_name" formControlName="full_name" />
-      </div>
+  <div>
+    <label for="password">Password:</label>
+    <input type="password" id="password" formControlName="password" />
+  </div>
 
-      <div>
-        <label for="role">Role:</label>
-        <input type="role" id="role" formControlName="role" />
-      </div>
-  
-    <button type="submit" [disabled]="testForm.invalid">Submit</button>
-  </form>
+  <button type="submit" [disabled]="testForm.invalid">Submit</button>
+</form>
