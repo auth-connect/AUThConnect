@@ -41,3 +41,8 @@ spec:
             configMapKeyRef:
               name: backend-config
               key: JWT
+        - name: ORIGIN
+          valueFrom:
+            configMapKeyRef:
+              name: backend-config
+              key: ORIGIN
