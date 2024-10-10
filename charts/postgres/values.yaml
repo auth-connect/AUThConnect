@@ -3,7 +3,7 @@ tag: 16
 port: 5432
 persistence:
   size: 16Gi
-  storageClass: default
+  storageClass: longhorn
 username: authconnect
 password: authconnect2024
 migrations:
