@@ -17,4 +17,3 @@ smtp:
   port: 587
   username: "authconnect"
   password: "21122002"
-  sender: "AUThConnect <no-reply@auth-connect.gr>"
