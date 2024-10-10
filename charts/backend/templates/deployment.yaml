@@ -25,6 +25,17 @@ spec:
         image: "{{ .Values.image.repository }}:{{ .Values.image.tag }}"
         ports:
         - containerPort: {{ .Values.port }}
+        args:
+        - --smtp-host
+        - {{ .Values.smtp.host }}
+        - --smtp-port
+        - {{ .Values.smtp.port | quote }}
+        - --smtp-username
+        - {{ .Values.smtp.username }}
+        - --smtp-password
+        - {{ .Values.smtp.password }}
+        - --smtp-sender
+        - {{ .Values.smtp.sender }}
         env:
         - name: ENV
           valueFrom:
@@ -46,14 +57,4 @@ spec:
             configMapKeyRef:
               name: backend-config
               key: ORIGIN
-        args:
-        - --smtp-host
-        - {{ .Values.smtp.host }}
-        - --smtp-port
-        - {{ .Values.smtp.port }}
-        - --smtp-username
-        - {{ .Values.smtp.username }}
-        - --smtp-password
-        - {{ .Values.smtp.password }}
-        - --smtp-sender
-        - {{ .Values.smtp.sender }}
+
