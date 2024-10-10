@@ -46,3 +46,14 @@ spec:
             configMapKeyRef:
               name: backend-config
               key: ORIGIN
+        args:
+        - --smtp-host
+        - {{ .Values.smtp.host }}
+        - --smtp-port
+        - {{ .Values.smtp.port }}
+        - --smtp-username
+        - {{ .Values.smtp.username }}
+        - --smtp-password
+        - {{ .Values.smtp.password }}
+        - --smtp-sender
+        - {{ .Values.smtp.sender }}

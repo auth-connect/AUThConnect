@@ -12,3 +12,9 @@ service:
   type: ClusterIP
   # TargetPort
   port: 8000
+smtp:
+  host: "postfix-mail.postfix.svc.cluster.local"
+  port: 587
+  username: "authconnect"
+  password: "21122002"
+  sender: "AUThConnect <no-reply@auth-connect.gr>"
