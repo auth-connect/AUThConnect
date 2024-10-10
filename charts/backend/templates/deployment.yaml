@@ -30,39 +30,39 @@ spec:
           valueFrom:
             configMapKeyRef:
               name: backend-config
-              key: ENV
+              key: env
         - name: DSN
           valueFrom:
             configMapKeyRef:
               name: backend-config
-              key: DSN
+              key: dsn
         - name: JWT
           valueFrom:
             configMapKeyRef:
               name: backend-config
-              key: JWT
+              key: jwt
         - name: ORIGIN
           valueFrom:
             configMapKeyRef:
               name: backend-config
-              key: ORIGIN
+              key: origin
         - name: SMTP_HOST
           valueFrom:
             configMapKeyRef:
               name: backend-config
-              key: SMTP_HOST
+              key: host 
         - name: SMTP_PORT
           valueFrom:
             configMapKeyRef:
               name: backend-config
-              key: SMTP_PORT
+              key: port 
         - name: SMTP_USERNAME
           valueFrom:
             configMapKeyRef:
               name: backend-config
-              key: SMTP_USERNAME
+              key: username
         - name: SMTP_PASSWORD
           valueFrom:
             configMapKeyRef:
               name: backend-config
-              key: SMTP_PASSWORD
+              key: password 
