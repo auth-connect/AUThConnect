@@ -34,6 +34,7 @@ type config struct {
 		password string
 		sender   string
 	}
+	origin string
 }
 
 type application struct {
@@ -46,6 +47,11 @@ type application struct {
 
 func main() {
 	var cfg config
+
+	origin := os.Getenv("ORIGIN")
+	if origin == "" {
+		origin = "http://localhost:4200"
+	}
 
 	flag.IntVar(&cfg.port, "port", 8000, "Backend server port")
 	flag.StringVar(&cfg.env, "env", os.Getenv("ENV"), "Environment (development|production)")
@@ -60,6 +66,7 @@ func main() {
 	flag.StringVar(&cfg.smtp.username, "smtp-username", "mailuser", "SMTP username")
 	flag.StringVar(&cfg.smtp.password, "smtp-password", "password", "SMTP password")
 	flag.StringVar(&cfg.smtp.sender, "smtp-sender", "AUThConnect <no-reply@auth-connect.gr>", "SMTP sender")
+	flag.StringVar(&cfg.origin, "origin", origin, "Alloweded Origins")
 	flag.Parse()
 
 	logger := logger.New(os.Stdout, logger.LevelInfo)

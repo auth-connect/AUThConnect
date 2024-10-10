@@ -2,6 +2,7 @@ package mail
 
 import (
 	"bytes"
+	"crypto/tls"
 	"embed"
 	"text/template"
 	"time"
@@ -21,6 +22,10 @@ type Mail struct {
 func New(host string, port int, username, password, sender string) Mail {
 	dialer := mail.NewDialer(host, port, username, password)
 	dialer.Timeout = 5 * time.Second
+
+	dialer.TLSConfig = &tls.Config{
+		InsecureSkipVerify: true,
+	}
 
 	return Mail{
 		dialer: dialer,
