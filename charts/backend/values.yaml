@@ -1,0 +1,19 @@
+replicaCount: 2
+image:
+  repository: authconnect/backend
+  tag: 0.1.0
+port: 8000
+env:
+  env: production
+  dsn: postgres://authconnect:authconnect2024@postgres.postgres.svc.cluster.local:5432/authconnect?sslmode=disable
+  jwt: PEgCMaqOZ8NJsy6IXPdzIMRwPxvRWQafcNmUtveTDOSxGOInVh3j6zcgLgKEocqW
+  origin: https://auth-connect.gr
+service:
+  type: ClusterIP
+  # TargetPort
+  port: 8000
+smtp:
+  host: "postfix-mail.postfix.svc.cluster.local"
+  port: 587
+  username: "authconnect"
+  password: "21122002"

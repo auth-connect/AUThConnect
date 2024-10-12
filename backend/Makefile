@@ -21,7 +21,7 @@ confirm:
 ## run/api: run the cmd/api application
 .PHONY: run/api
 run/api:
-	@go run ./cmd/api -db-dsn=${DSN}
+	@go run ./cmd/api -db-dsn=${DSN} -jwt-secret=${JWT_SECRET}
 
 ## db/psql: connect to the database using psql
 .PHONY: db/psql
@@ -32,13 +32,19 @@ db/psql:
 .PHONY: db/migrations/new
 db/migrations/new:
 	@echo 'Creating migration files for ${name}...'
-	migrate create -seq -ext=.sql -dir=./migrations ${name}
+	@migrate create -seq -ext=.sql -dir=./migrations ${name}
 
 ## db/migrations/up: apply all up database migrations
 .PHONY: db/migrations/up
 db/migrations/up: confirm
 	@echo 'Running up migrations'
 	@migrate -path ./migrations -database ${DSN} up
+
+## db/migrations/down: apply all down database migrations
+.PHONY: db/migrations/down
+db/migrations/down:
+	@echo 'Running down migrations'
+	@migrate -path ./migrations -database ${DSN} down
 
 # ==================================================================================== #
 # QUALITY CONTROL

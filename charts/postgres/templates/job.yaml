@@ -1,0 +1,20 @@
+apiVersion: batch/v1
+kind: Job
+metadata:
+  name: migration
+  namespace: postgres
+spec:
+  template:
+    spec:
+      imagePullSecrets:
+      - name: my-registry-secret
+      containers:
+      - name: migration
+        image: authconnect/migrate:latest
+        command: [
+          "migrate",
+          "-path=/migrations",
+          "-database=postgres://{{ .Values.username }}:{{ .Values.password }}@postgres:{{ .Values.port }}/authconnect?sslmode=disable",
+          "up"
+        ]
+      restartPolicy: OnFailure

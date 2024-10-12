@@ -1,4 +1,6 @@
+declare const window: any;
+
 export const environment = {
-  production: true,
-  apiUrl: (window as any).__env.apiUrl || 'http://localhost:8000', // Load from set-env.js or fallback
+  production: false,
+  apiUrl: window.__env && window.__env.apiUrl ? window.__env.apiUrl : 'API_URL_NOT_SET',
 };

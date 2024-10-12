@@ -3,19 +3,28 @@ services:
     image: postgres:latest
     container_name: postgres
     environment:
-      POSTGRES_DB: ${DB_DATABASE}
-      POSTGRES_USER: ${DB_USERNAME}
-      POSTGRES_PASSWORD: ${DB_PASSWORD}
+      POSTGRES_DB: authconnect
+      POSTGRES_USER: authconnect
+      POSTGRES_PASSWORD: 21122002
     ports:
-      - "${DB_PORT}:5432"
+      - "5432:5432"
     volumes:
       - psql_volume:/var/lib/postgresql/data
       # - ./postgres/init.sql:/docker-entrypoint-initdb.d/init.sql
     healthcheck:
-      test: [ "CMD-SHELL", "pg_isready -U ${DB_USERNAME} -d ${DB_DATABASE}" ]
+      test: [ "CMD-SHELL", "pg_isready -U authconnect -d authconnect"]
       interval: 10s
       timeout: 5s
       retries: 3
+
+  migrate:
+    image: migrate/migrate:latest
+    command: ["-path=/migrations", "-database=postgres://authconnect:21122002@postgres:5432/authconnect?sslmode=disable", "up"]
+    volumes:
+      - ./migrations:/migrations
+    depends_on:
+      postgres:
+        condition: service_healthy
   
   backend:
     build:
@@ -25,15 +34,11 @@ services:
     ports:
       - "8000:8000"
     environment:
-      DB_DATABASE: ${DB_DATABASE}
-      DB_USERNAME: ${DB_USERNAME}
-      DB_PASSWORD: ${DB_PASSWORD}
-      DB_HOST: postgres
-      DB_SCHEMA: ${DB_SCHEMA}
-      CORS_URL: localhost:4200
+      ENV: production
+      DSN: postgres://authconnect:21122002@postgres:5432/authconnect?sslmode=disable
+      JWT: PEgCMaqOZ8NJsy6IXPdzIMRwPxvRWQafcNmUtveTDOSxGOInVh3j6zcgLgKEocqW
     depends_on:
-      postgres:
-        condition: service_healthy
+      - migrate
 
 volumes:
   psql_volume:
