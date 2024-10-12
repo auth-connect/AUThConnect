@@ -4,6 +4,7 @@ import (
 	"bytes"
 	"crypto/tls"
 	"embed"
+	"strconv"
 	"text/template"
 	"time"
 
@@ -19,8 +20,13 @@ type Mail struct {
 	sender string
 }
 
-func New(host string, port int, username, password, sender string) Mail {
-	dialer := mail.NewDialer(host, port, username, password)
+func New(host string, port, username, password, sender string) Mail {
+	p, err := strconv.Atoi(port)
+	if err != nil {
+		panic("must include a valid port")
+	}
+
+	dialer := mail.NewDialer(host, p, username, password)
 	dialer.Timeout = 5 * time.Second
 
 	dialer.TLSConfig = &tls.Config{
