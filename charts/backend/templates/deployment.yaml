@@ -1,0 +1,68 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name:  backend
+  labels:
+    app: backend
+    tier: backend
+  namespace: backend
+spec:
+  replicas: {{ .Values.replicaCount }}
+  selector:
+    matchLabels:
+      app: backend
+      tier: backend
+  template:
+    metadata:
+      labels:
+        app: backend
+        tier: backend
+    spec:
+      imagePullSecrets:
+      - name: my-registry-secret
+      containers:
+      - name: backend
+        image: "{{ .Values.image.repository }}:{{ .Values.image.tag }}"
+        ports:
+        - containerPort: {{ .Values.port }}
+        env:
+        - name: ENV
+          valueFrom:
+            configMapKeyRef:
+              name: backend-config
+              key: env
+        - name: DSN
+          valueFrom:
+            configMapKeyRef:
+              name: backend-config
+              key: dsn
+        - name: JWT
+          valueFrom:
+            configMapKeyRef:
+              name: backend-config
+              key: jwt
+        - name: ORIGIN
+          valueFrom:
+            configMapKeyRef:
+              name: backend-config
+              key: origin
+        - name: SMTP_HOST
+          valueFrom:
+            configMapKeyRef:
+              name: backend-config
+              key: host 
+        - name: SMTP_PORT
+          valueFrom:
+            configMapKeyRef:
+              name: backend-config
+              key: port 
+        - name: SMTP_USERNAME
+          valueFrom:
+            configMapKeyRef:
+              name: backend-config
+              key: username
+        - name: SMTP_PASSWORD
+          valueFrom:
+            configMapKeyRef:
+              name: backend-config
+              key: password 

@@ -1,7 +1,6 @@
 package server
 
 import (
-	"AUThConnect/internal/models"
 	"fmt"
 	"net/http"
 	"os"

@@ -1,0 +1,8 @@
+replicaCount: 2
+image:
+  repository: authconnect/frontend
+  tag: 0.1.0
+env:
+  API_URL: http://backend.backend.svc.cluster.local:8000
+service:
+  type: ClusterIP

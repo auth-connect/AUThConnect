@@ -1,0 +1,36 @@
+worker_processes auto;
+
+events {
+    worker_connections 1024;
+}
+
+http {
+    include /etc/nginx/mime.types;
+    default_type application/octet-stream;
+
+    sendfile on;
+    keepalive_timeout 65;
+
+    server {
+      listen 80;
+      server_name auth-connect.gr;
+
+      return 301 https://$host$request_uri;
+    }
+
+    server {
+        listen 443 ssl;
+        server_name auth-connect.gr;
+
+        ssl_certificate /etc/nginx/ssl/tls.crt;
+        ssl_certificate_key /etc/nginx/ssl/tls.key;
+
+        root /usr/share/nginx/html;
+        index index.html;
+
+        location / {
+            try_files $uri $uri/ /index.html;
+        }
+    }
+}
+

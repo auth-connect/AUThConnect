@@ -28,9 +28,6 @@ FROM nginx:alpine3.19 AS prod
 # Copy the build output from the build stage to the Nginx html directory
 COPY --from=builder /app/dist/frontend/browser /usr/share/nginx/html
 
-# Copy custom Nginx configuration
-COPY nginx.conf /etc/nginx/nginx.conf
-
 # Copy the set-env.js script
 COPY src/assets/set-env.js /usr/share/nginx/html/assets/set-env.js
 
@@ -42,6 +39,7 @@ RUN chmod +x /entrypoint.sh
 
 # Expose port 80
 EXPOSE 80
+EXPOSE 443
 
 # # Start Nginx server
 # CMD ["nginx", "-g", "daemon off;"]
