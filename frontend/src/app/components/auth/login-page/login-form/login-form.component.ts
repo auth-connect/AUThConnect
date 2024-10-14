@@ -9,8 +9,8 @@ import {
 import { NgIconComponent, provideIcons, provideNgIconsConfig } from '@ng-icons/core';
 import { lucideLoaderCircle, lucideGithub } from '@ng-icons/lucide';
 import { AuthService } from '../../../../services/auth-service/auth.service';
-import { UserInterface } from '../../../../interfaces/user.interface';
-import { AuthFacade } from '../../../../facades/auth-facade/auth-facade.service';
+import { IUser } from '../../../../interfaces/user.interface';
+import { UserAuthFacade } from '../../../../facades/userauth-facade/userauth-facade.service';
 
 @Component({
   selector: 'app-login-form',
@@ -30,7 +30,7 @@ export class LoginFormComponent implements OnInit {
   fb = inject(FormBuilder);
 
   authService = inject(AuthService);
-  authFacade = inject(AuthFacade);
+  userAuthFacade = inject(UserAuthFacade);
 
 
   isLoading = signal(false);
@@ -59,10 +59,8 @@ export class LoginFormComponent implements OnInit {
       return;
     this.isLoading.set(true);
 		setTimeout(() => this.isLoading.set(false), 3000);
-    const user: UserInterface = this.form.getRawValue()
 
-    console.log(user);
-    // this.authFacade.loginUser(user);
+    this.userAuthFacade.loginUser(this.form.getRawValue());
   }
 
 }

@@ -1,4 +1,4 @@
-import { HttpClient } from '@angular/common/http';
+import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { Component, inject, OnInit, signal } from '@angular/core';
 import {
   FormBuilder,
@@ -9,8 +9,10 @@ import {
 import { NgIconComponent, provideIcons, provideNgIconsConfig } from '@ng-icons/core';
 import { lucideLoaderCircle, lucideGithub } from '@ng-icons/lucide';
 import { AuthService } from '../../../../services/auth-service/auth.service';
-import { UserInterface } from '../../../../interfaces/user.interface';
-import { AuthFacade } from '../../../../facades/auth-facade/auth-facade.service';
+import { IUser } from '../../../../interfaces/user.interface';
+import { UserAuthFacade } from '../../../../facades/userauth-facade/userauth-facade.service';
+import { environment } from '../../../../../environment/environment';
+
 
 @Component({
   selector: 'app-register-form',
@@ -30,7 +32,7 @@ export class RegisterFormComponent implements OnInit {
   fb = inject(FormBuilder);
 
   authService = inject(AuthService);
-  authFacade = inject(AuthFacade);
+  userAuthFacade = inject(UserAuthFacade);
 
 
   isLoading = signal(false);
@@ -39,13 +41,13 @@ export class RegisterFormComponent implements OnInit {
   form!: FormGroup;
 
 
-  constructor() {}
+  constructor(private http: HttpClient) {}
   
   ngOnInit(): void {
     this.initializeForm();
   }
 
-  initializeForm(){
+  private initializeForm(){
     this.form = this.fb.nonNullable.group({
       email: ['', [Validators.required, Validators.email]],
       password: ['', [Validators.required, Validators.minLength(6)]],
@@ -55,15 +57,14 @@ export class RegisterFormComponent implements OnInit {
 
 
 
-  onSubmit(): void {
+  public onSubmit(): void {
     if (this.form.invalid)
       return;
     this.isLoading.set(true);
 		setTimeout(() => this.isLoading.set(false), 3000);
-    const user: UserInterface = this.form.getRawValue()
 
-    console.log(user);
-    // this.authFacade.loginUser(user);
+    this.userAuthFacade.registerUser(this.form.getRawValue());
   }
+
 
 }

@@ -11,9 +11,5 @@ export const appConfig: ApplicationConfig = {
     provideZoneChangeDetection({ eventCoalescing: true }), 
     provideRouter(routes), 
     provideHttpClient(withInterceptors([authInterceptor])),
-    // provideNgIconLoader(name => {
-    //   const http = inject(HttpClient);
-    //   return http.get(`/assets/icons/${name}.svg`, { responseType: 'text' });
-    // }),
   ]
 };

@@ -10,10 +10,8 @@ import {
 import { environment } from '../../../../environment/environment';
 
 export interface Payload {
-  username: string;
-  full_name: string;
+  name: string;
   password: string;
-  role: string;
   email: string;
 }
 
@@ -37,11 +35,9 @@ export class TestFormComponent implements OnInit {
 
   private initializeForm(): void {
     this.testForm = this.fb.group({
-      username: ['', Validators.required],
-      full_name: ['', Validators.required],
+      name: ['', Validators.required],
       email: ['', [Validators.required, Validators.email]], // Added email validator
       password: ['', [Validators.required, Validators.minLength(6)]], // Added minLength validator
-      role: ['', Validators.required],
     });
   }
 
@@ -52,11 +48,9 @@ export class TestFormComponent implements OnInit {
     }
 
     const payload: Payload = {
-      username: form.get('username')?.value,
-      full_name: form.get('full_name')?.value,
+      name: form.get('name')?.value,
       password: form.get('password')?.value,
       email: form.get('email')?.value,
-      role: form.get('role')?.value,
     };
 
     const headers = new HttpHeaders({
@@ -65,7 +59,7 @@ export class TestFormComponent implements OnInit {
       // Add other custom headers here if necessary
     });
 
-    const apiUrl = `${environment.apiUrl}/users`;
+    const apiUrl = `${environment.apiUrl}/v1/users/register`;
 
     this.http.post<any>(apiUrl, payload, { headers }).subscribe(
       (response) => {

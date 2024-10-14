@@ -16,7 +16,4 @@ export class RegisterPageComponent {
   onLoginClick(): void {
     this.router.navigate(['/login']); // Navigate to the login page
   }
-
-
-
 }
