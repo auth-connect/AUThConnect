@@ -19,7 +19,7 @@ export class UserAuthFacade {
 
   constructor() {}
 
-  registerUser(user: IUser) {
+  registerUser(payload: any) {
     const headers = new HttpHeaders({
       'Content-Type': 'application/json',
       Accept: 'application/json',
@@ -29,9 +29,9 @@ export class UserAuthFacade {
     const apiUrl = `${environment.apiUrl}/v1/users/register`;
 
     this.http
-      .post<{ user: IUser }>(apiUrl, {
-        user: user,
-      }, { headers })
+      .post<{ user: IUser }>(apiUrl,
+        payload
+      , { headers })
       .subscribe((response) => {
         console.log('response', response);
         localStorage.setItem('token', response.user.token);
@@ -42,7 +42,7 @@ export class UserAuthFacade {
   }
 
   // // TODO Create actions
-  loginUser(user: IUser) {
+  loginUser(payload: any) {
     const headers = new HttpHeaders({
       'Content-Type': 'application/json',
       Accept: 'application/json',
@@ -51,9 +51,9 @@ export class UserAuthFacade {
 
     const apiUrl = `${environment.apiUrl}/v1/users/login`;
     this.http
-      .post<{ user: IUser }>(apiUrl, {
-        user: user,
-      }, { headers })
+      .post<{ user: IUser }>(apiUrl,
+        payload
+      , { headers })
       .subscribe((response) => {
         console.log('response', response);
         localStorage.setItem('token', response.user.token);

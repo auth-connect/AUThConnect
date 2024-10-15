@@ -63,7 +63,13 @@ export class RegisterFormComponent implements OnInit {
     this.isLoading.set(true);
 		setTimeout(() => this.isLoading.set(false), 3000);
 
-    this.userAuthFacade.registerUser(this.form.getRawValue());
+    const payload = {
+      name: this.form.get('username')?.value,
+      password: this.form.get('password')?.value,
+      email: this.form.get('email')?.value,
+    };
+
+    this.userAuthFacade.registerUser(payload);
   }
 
 
