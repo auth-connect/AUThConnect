@@ -1,0 +1,53 @@
+/* villa-listing.component.css */
+.villa-listing {
+    text-align: center;
+    padding: 20px;
+  }
+  
+  .tabs button {
+    margin: 0 10px;
+    padding: 10px;
+    background-color: #f0f0f0;
+    border: none;
+    cursor: pointer;
+  }
+  
+  .tabs button:hover {
+    background-color: #e0e0e0;
+  }
+  
+  .villas {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    gap: 20px;
+  }
+  
+  .villa-card {
+    width: 300px;
+    border: 1px solid #ccc;
+    border-radius: 8px;
+    overflow: hidden;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+  }
+  
+  .villa-card img {
+    width: 100%;
+    height: 200px;
+    object-fit: cover;
+  }
+  
+  .villa-rating, .villa-price {
+    padding: 10px;
+  }
+  
+  .current-price {
+    font-weight: bold;
+  }
+  
+  .old-price {
+    text-decoration: line-through;
+    color: red;
+    margin-left: 8px;
+  }
+  

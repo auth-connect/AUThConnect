@@ -1,12 +1,12 @@
 
 
 <div
-  class="bg-white fixed inset-0 z-50 h-screen w-[15rem] transition-all duration-500 ease-in-out border-r-2 border-black/40"
+  class="bg-white fixed inset-0 z-50 h-screen w-[15rem] transition-all duration-500 ease-in-out border-r text-zinc-800"
   [ngClass]="isSidebarCollapsed() ? 'w-[4.5rem]' : 'translate-x-0'"
 >
 
-  <div class="relative border-b-2 border-black/40">
-    <div class="flex items-center py-4 gap-4 px-4 h-20 cursor-pointer" (click)="toggleCollapse()">
+  <div class="relative">
+    <div class="flex items-center py-4 gap-4 px-4 pb-0 h-14 cursor-pointer" (click)="toggleCollapse()">
       <div class="flex items-center justify-center">
         <svg viewBox="0 0 64.81481481481481 51.358802333938" class="w-10 h-10 fill-current text-orange-600">
           <g transform="translate(-19.51634488689644, -25.67940312615183) scale(1.02717604667876)">
@@ -16,7 +16,7 @@
       </div>
       @if (!isSidebarCollapsed()){
           <span
-              class="text-black flex antialiased tracking-normal text-l font-semibold leading-relaxed overflow-hidden whitespace-nowrap transition-all duration-500 ease-in-out"
+              class="flex antialiased tracking-normal text-l font-semibold leading-relaxed overflow-hidden whitespace-nowrap transition-all duration-500 ease-in-out"
               [ngClass]="{
                 'w-0 opacity-0': isSidebarCollapsed(),
                 'w-auto opacity-100': !isSidebarCollapsed()
@@ -28,35 +28,51 @@
     </div>
   </div>
   
-  <div class="list-none flex flex-col items-center cursor-pointer">
-    @for (item of items; track $index) {
-      <li class="w-full">
-        <a
-          class="middle none font-bold center transition-all disabled:opacity-50 disabled:shadow-none disabled:pointer-events-none rounded-lg hover:bg-slate-50 active:bg-slate-50 flex w-full items-center gap-4 px-4 py-4 capitalize"
-          [routerLink]="item.routeLink"
-          routerLinkActive="bg-slate-100 hover:bg-slate-100"
-          [routerLinkActiveOptions]="{ exact: true }"
-        >
-        <div class="flex justify-center items-center w-10 h-10 flex-shrink-0"> 
-          <ng-icon [name]="item.icon"></ng-icon>
-        </div>
-          @if (!isSidebarCollapsed()) {
-            <!-- <span class="text-white overflow-hidden">{{ item.label }}</span> -->
-            <span
-              class="text-black/70 overflow-hidden whitespace-nowrap transition-all duration-500 ease-in-out"
-              [ngClass]="{
-                'w-0 opacity-0': isSidebarCollapsed(),
-                'w-auto opacity-100': !isSidebarCollapsed()
-              }"
-            >
-              {{ item.label }}
-            </span>
-          }
 
-          
-        </a>
-      </li>
-    }
+  <!-- List -->
+  <div class="px-3 overflow-hidden">
+    <div class="flex flex-row items-center h-12">
+      @if (!isSidebarCollapsed()) {
+        <span class="capitalize whitespace-nowrap mr-2">
+          Utilities
+        </span>
+      }
+      
+      <div class="border-t border-black w-4/5 mx-auto"></div>
+      
+    </div>
+  
+    <div class="list-none flex flex-col items-center cursor-pointer gap-2">
+      @for (item of items; track $index) {
+        <li class="w-full">
+          <a
+            class="middle none center transition-all disabled:opacity-50 disabled:shadow-none disabled:pointer-events-none rounded-xl hover:bg-slate-50 hover:rounded-xl active:bg-slate-50 flex w-full items-center gap-2 py-2 px-1 capitalize"
+            [routerLink]="item.routeLink"
+            routerLinkActive="bg-slate-100 hover:bg-slate-100 rounded-xl"
+            [routerLinkActiveOptions]="{ exact: true }"
+          >
+          <div class="flex justify-center items-center mx-2 flex-shrink-0"> 
+            <ng-icon [name]="item.icon"></ng-icon>
+          </div>
+            @if (!isSidebarCollapsed()) {
+              <!-- <span class="text-white overflow-hidden">{{ item.label }}</span> -->
+              <span
+                class="text-sm overflow-hidden whitespace-nowrap transition-all duration-500 ease-in-out"
+                [ngClass]="{
+                  'w-0 opacity-0': isSidebarCollapsed(),
+                  'w-auto opacity-100': !isSidebarCollapsed()
+                }"
+              >
+                {{ item.label }}
+              </span>
+            }
+  
+            
+          </a>
+        </li>
+      }
+    </div>
   </div>
+  
 </div>
 

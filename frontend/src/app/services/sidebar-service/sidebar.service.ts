@@ -6,6 +6,7 @@ export interface RouteInterface{
     routeLink: string,
     icon: string,
     label: string,
+    selected?: boolean,
 }
 
 @Injectable({

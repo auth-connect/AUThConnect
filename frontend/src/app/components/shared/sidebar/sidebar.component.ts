@@ -14,7 +14,7 @@ import { RouteInterface, SidebarService } from '../../../services/sidebar-servic
   viewProviders: [
     provideIcons({ featherHome, featherMessageCircle, bootstrapQuestion, featherBook }), 
     provideNgIconsConfig({
-      size: '1.7em',
+      size: '1.5em',
       color: 'rgb(0 0 0 / 0.7)',
     }),
   ],

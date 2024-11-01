@@ -1,0 +1,53 @@
+<!-- villa-listing.component.html -->
+<div class="flex flex-col p-8">
+  <div class="w-full">
+    <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 mx-auto justify-items-center max-w-[1500px]">
+      <h2 class="col-span-full w-full text-start text-2xl font-bold">News</h2>
+      <p class="col-span-full w-full text-start text-gray-600">Explore latest news</p>
+      <!-- @for (item of firstSixItems; track item) { -->
+        <!-- <div
+          [ngClass]="item.index === 0 ? 'relative border rounded-xl overflow-hidden shadow-md bg-center bg-cover w-full col-span-2 row-span-2' : 'relative border rounded-xl overflow-hidden shadow-md bg-center bg-cover max-w-[450px] h-[200px]'"
+          [style.backgroundImage]="'url(' + item.image + ')'"
+        > -->
+          <!-- Optional Overlay for Better Text Visibility -->
+          <!-- <div class="absolute inset-0 bg-black opacity-25"></div> -->
+        
+          <!-- Content Overlay -->
+          <!-- <div class="absolute text-center bottom-0 left-0 p-4"> -->
+            <!-- <h3 class="text-white text-xl font-semibold">Thelw na faw fagito para poli</h3> -->
+            <!-- Add more content here if needed -->
+          <!-- </div> -->
+        <!-- </div> -->
+      <!-- } -->
+      <ng-container *ngFor="let item of firstSixItems; let i = index;">
+        <!-- First Item with Different CSS -->
+        <div
+          *ngIf="i === 0"
+          class="relative md:col-span-2 md:row-span-2 border rounded-xl overflow-hidden shadow-md bg-center bg-cover w-full hover:shadow-lg transition-shadow duration-300"
+          [style.backgroundImage]="'url(' + item.image + ')'"
+          
+        >
+          <!-- Overlay and Content -->
+          <div class="absolute inset-0 bg-black opacity-25"></div>
+          <div class="absolute text-center bottom-0 left-0 p-4 w-full bg-gradient-to-t from-black to-transparent">
+            <h3 class="text-white text-xl font-semibold">{{ item.name }}</h3>
+          </div>
+        </div>
+        
+        <!-- Other Items with Default CSS -->
+        <div
+          *ngIf="i !== 0"
+          class="relative border rounded-xl overflow-hidden shadow-md bg-center bg-cover w-full h-[250px] hover:shadow-lg transition-shadow duration-300"
+          [style.backgroundImage]="'url(' + item.image + ')'"
+          
+        >
+          <!-- Overlay and Content -->
+          <div class="absolute inset-0 bg-black opacity-25"></div>
+          <div class="absolute text-center bottom-0 left-0 p-4 w-full bg-gradient-to-t from-black to-transparent">
+            <h3 class="text-white text-xl font-semibold">{{ item.name }}</h3>
+          </div>
+        </div>
+      </ng-container>
+    </div>
+  </div>
+</div>
